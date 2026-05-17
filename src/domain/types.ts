@@ -6,6 +6,40 @@ export type Region =
   | 'Middle East & Africa'
   | 'Oceania';
 
+export type Faith =
+  | 'Catholic'
+  | 'Protestant'
+  | 'Orthodox'
+  | 'Christian (mixed)'
+  | 'Muslim'
+  | 'Buddhist'
+  | 'Hindu'
+  | 'Jewish'
+  | 'Secular';
+
+export type VisaDifficulty = 'easy' | 'medium' | 'hard' | 'closed';
+
+export type EnglishLevel = 'widespread' | 'urban' | 'limited';
+
+export const ALL_FAITHS: Faith[] = [
+  'Catholic',
+  'Protestant',
+  'Orthodox',
+  'Christian (mixed)',
+  'Muslim',
+  'Buddhist',
+  'Hindu',
+  'Jewish',
+  'Secular',
+];
+
+export const VISA_OPTIONS: Array<{ value: VisaDifficulty | 'any'; label: string }> = [
+  { value: 'any', label: 'Any' },
+  { value: 'easy', label: 'Easy (dedicated retirement visa)' },
+  { value: 'medium', label: 'Easy or moderate (≤ medium)' },
+  { value: 'hard', label: 'Up to hard (excludes closed)' },
+];
+
 export interface UserInputs {
   /** Current liquid savings in USD. */
   currentSavings: number;
@@ -36,6 +70,12 @@ export interface Country {
   safetyScore: number;
   /** GPI rank out of ~163 countries. Lower is safer. */
   safetyRank: number;
+  /** Dominant religious tradition (cultural majority, not necessarily practicing). */
+  dominantFaith: Faith;
+  /** Difficulty of obtaining a retirement / long-term residency visa as a US citizen. */
+  visaDifficulty: VisaDifficulty;
+  /** How widely English is spoken locally. */
+  englishLevel: EnglishLevel;
   residencyNote: string;
   confidence: 'high' | 'medium' | 'low';
   sources: Array<{ name: string; url: string | null; lastVerified: string }>;
@@ -85,7 +125,28 @@ export type SafetyThreshold = 'any' | 'very-safe' | 'safe' | 'moderate';
 export interface FilterCriteria {
   regions: Region[];
   safety: SafetyThreshold;
+  /** Empty array = no faith filter (show all). */
+  faiths: Faith[];
+  /** "any" = no visa filter. Otherwise: include all countries up to and including this difficulty level. */
+  visa: VisaDifficulty | 'any';
+  /** "any" = no language filter. Otherwise: include countries at this English level or better (widespread > urban > limited). */
+  english: EnglishLevel | 'any';
 }
+
+/** Numeric ordering for visa difficulty so "include up to X" filter works. */
+export const VISA_LEVEL: Record<VisaDifficulty, number> = {
+  easy: 0,
+  medium: 1,
+  hard: 2,
+  closed: 3,
+};
+
+/** Numeric ordering for English level so "at least X" filter works. */
+export const ENGLISH_LEVEL: Record<EnglishLevel, number> = {
+  widespread: 2,
+  urban: 1,
+  limited: 0,
+};
 
 /** Upper-bound GPI score per safety threshold. Lower GPI = more peaceful. */
 export const SAFETY_THRESHOLD_SCORE: Record<SafetyThreshold, number> = {

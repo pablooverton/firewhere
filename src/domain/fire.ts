@@ -1,5 +1,5 @@
 import type { Country, FilterCriteria, FireResult, UserInputs } from './types';
-import { SAFETY_THRESHOLD_SCORE } from './types';
+import { ENGLISH_LEVEL, SAFETY_THRESHOLD_SCORE, VISA_LEVEL } from './types';
 
 /**
  * Closed-form solve for the number of years until a portfolio with periodic
@@ -87,19 +87,27 @@ export function computeAll(user: UserInputs, countries: Country[]): FireResult[]
 }
 
 /**
- * Filter countries by region and safety threshold.
+ * Filter countries by region, safety, faith, visa difficulty, and English level.
  *
- * - If `regions` is empty, no region filter is applied (matches all).
- * - Safety: keep countries with safetyScore <= threshold's upper bound.
- *   'any' keeps all; 'very-safe' keeps GPI ≤ 1.5; 'safe' keeps ≤ 2.0; 'moderate' keeps ≤ 2.5.
+ * - regions: empty array means no region filter; otherwise the country's region must be in the list.
+ * - safety: keep countries with safetyScore <= the threshold's upper bound. 'any' is unbounded.
+ * - faiths: empty array means no faith filter; otherwise the country's dominantFaith must be in the list.
+ * - visa: 'any' means no filter; otherwise include countries whose VISA_LEVEL is at or below the threshold's level.
+ * - english: 'any' means no filter; otherwise include countries whose ENGLISH_LEVEL is at or above the threshold.
  */
 export function filterCountries(countries: Country[], criteria: FilterCriteria): Country[] {
   const safetyMax = SAFETY_THRESHOLD_SCORE[criteria.safety];
   const regionSet = criteria.regions.length === 0 ? null : new Set(criteria.regions);
+  const faithSet = criteria.faiths.length === 0 ? null : new Set(criteria.faiths);
+  const visaMax = criteria.visa === 'any' ? Infinity : VISA_LEVEL[criteria.visa];
+  const englishMin = criteria.english === 'any' ? -Infinity : ENGLISH_LEVEL[criteria.english];
 
   return countries.filter((c) => {
     if (regionSet && !regionSet.has(c.region)) return false;
     if (c.safetyScore > safetyMax) return false;
+    if (faithSet && !faithSet.has(c.dominantFaith)) return false;
+    if (VISA_LEVEL[c.visaDifficulty] > visaMax) return false;
+    if (ENGLISH_LEVEL[c.englishLevel] < englishMin) return false;
     return true;
   });
 }

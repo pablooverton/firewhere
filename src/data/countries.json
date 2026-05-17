@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "lastUpdated": "2026-05-17",
   "lastReviewed": "2026-05-17",
   "schema": {
@@ -10,7 +10,10 @@
     "swr": "Suggested safe withdrawal rate baseline for this country.",
     "safetyScore": "Global Peace Index 2025 score (1.0 = most peaceful, ~3.5 = least). Lower is safer.",
     "safetyRank": "GPI 2025 rank out of 163 countries. Lower is safer.",
-    "confidence": "high | medium | low — reflects how well-supported the parameter set is by public data."
+    "confidence": "high | medium | low — reflects how well-supported the parameter set is by public data.",
+    "dominantFaith": "Dominant religious tradition (cultural majority, not necessarily practicing).",
+    "visaDifficulty": "Retirement / long-term residency visa difficulty for US citizens: easy | medium | hard | closed.",
+    "englishLevel": "How widely English is spoken: widespread | urban (cities/tourist areas) | limited (need to learn the local language)."
   },
   "dataSources": {
     "safety": {
@@ -36,18 +39,33 @@
       "name": "United States",
       "flag": "US",
       "region": "Americas",
-      "colMultiplier": 1.0,
+      "colMultiplier": 1,
       "annualHealthcareUSD": 12000,
       "withdrawalTaxRate": 0.12,
       "swr": 0.04,
       "safetyScore": 2.443,
       "safetyRank": 128,
+      "dominantFaith": "Christian (mixed)",
+      "visaDifficulty": "easy",
+      "englishLevel": "widespread",
       "residencyNote": "Default base case. Healthcare estimate assumes pre-Medicare ACA marketplace coverage for a retired couple.",
       "confidence": "high",
       "sources": [
-        { "name": "Trinity Study / Bengen 4% rule", "url": null, "lastVerified": "2026-05-17" },
-        { "name": "IRS federal income tax brackets", "url": null, "lastVerified": "2026-05-17" },
-        { "name": "KFF ACA marketplace premium data", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Trinity Study / Bengen 4% rule",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        },
+        {
+          "name": "IRS federal income tax brackets",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        },
+        {
+          "name": "KFF ACA marketplace premium data",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Withdrawal tax rate assumes mixed taxable/IRA/Roth at moderate income. Heavy pre-tax skews higher.",
@@ -66,11 +84,22 @@
       "swr": 0.04,
       "safetyScore": 1.491,
       "safetyRank": 14,
+      "dominantFaith": "Christian (mixed)",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "No dedicated retirement visa for non-residents. Family-sponsored or skilled-worker pathways. Permanent residency required for provincial healthcare access.",
       "confidence": "medium",
       "sources": [
-        { "name": "Canada Revenue Agency tax treaty with US", "url": null, "lastVerified": "2026-05-17" },
-        { "name": "Provincial healthcare plan overviews", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Canada Revenue Agency tax treaty with US",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        },
+        {
+          "name": "Provincial healthcare plan overviews",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Provincial healthcare excellent for residents; wait times for non-emergency procedures can be significant.",
@@ -88,11 +117,22 @@
       "swr": 0.04,
       "safetyScore": 2.636,
       "safetyRank": 135,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "urban",
       "residencyNote": "Temporary Resident visa (4 years renewable) at ~$4,300/mo income or ~$72k savings. Permanent Resident after 4 years or with higher thresholds.",
       "confidence": "medium",
       "sources": [
-        { "name": "SAT Mexico tax authority (foreign income)", "url": null, "lastVerified": "2026-05-17" },
-        { "name": "Wikipedia: Visa policy of Mexico", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "SAT Mexico tax authority (foreign income)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        },
+        {
+          "name": "Wikipedia: Visa policy of Mexico",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Safety varies dramatically by state; expat hubs (San Miguel, Mérida, Lake Chapala) much safer than national average.",
@@ -110,10 +150,17 @@
       "swr": 0.04,
       "safetyScore": 1.843,
       "safetyRank": 54,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "urban",
       "residencyNote": "Pensionado: $1,000/mo lifetime pension. Rentista: $2,500/mo for 2 yrs or $60k deposit. Inversionista: $150k investment. No standing army.",
       "confidence": "medium",
       "sources": [
-        { "name": "Costa Rica Ministerio de Hacienda (foreign-source income)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Costa Rica Ministerio de Hacienda (foreign-source income)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Foreign-source income generally exempt from Costa Rican income tax.",
@@ -131,10 +178,17 @@
       "swr": 0.04,
       "safetyScore": 2.006,
       "safetyRank": 84,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "urban",
       "residencyNote": "Pensionado visa: $1,000/mo lifetime pension ($750 if buying $100k+ property). Very generous discounts for pensionado holders.",
       "confidence": "medium",
       "sources": [
-        { "name": "Panama DGI (territorial tax system)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Panama DGI (territorial tax system)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Territorial tax system: foreign-source income not taxed.",
@@ -152,10 +206,17 @@
       "swr": 0.04,
       "safetyScore": 2.695,
       "safetyRank": 140,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Retirement (M-Pensionado) visa: ~$1,000/mo pension. Medellín and Bogotá popular with expats.",
       "confidence": "medium",
       "sources": [
-        { "name": "Colombia DIAN (resident worldwide taxation)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Colombia DIAN (resident worldwide taxation)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Safety improved significantly since 2002 but varies by region; cartel and ELN activity in rural areas.",
@@ -173,10 +234,17 @@
       "swr": 0.04,
       "safetyScore": 2.459,
       "safetyRank": 129,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "limited",
       "residencyNote": "Retirement visa: ~$1,400/mo passive income. Uses US dollar (dollarized economy). Cuenca and Vilcabamba popular expat destinations.",
       "confidence": "low",
       "sources": [
-        { "name": "SRI Ecuador (foreign income treatment)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "SRI Ecuador (foreign income treatment)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Security has deteriorated significantly in coastal cities (Guayaquil, Manta) since 2023. Highlands remain safer.",
@@ -194,10 +262,17 @@
       "swr": 0.04,
       "safetyScore": 1.784,
       "safetyRank": 48,
+      "dominantFaith": "Secular",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Permanent residency requires demonstrating sufficient income. 11-year tax holiday on foreign-source income for new residents (extended in 2020).",
       "confidence": "medium",
       "sources": [
-        { "name": "DGI Uruguay (5/11-year tax holiday rules)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "DGI Uruguay (5/11-year tax holiday rules)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Most peaceful country in South America by most measures.",
@@ -215,10 +290,17 @@
       "swr": 0.04,
       "safetyScore": 1.899,
       "safetyRank": 62,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Temporary residency for retirees with sufficient passive income. Path to permanent residency after 1 year of temporary status.",
       "confidence": "medium",
       "sources": [
-        { "name": "SII Chile (6-year foreign-source exemption for new residents)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "SII Chile (6-year foreign-source exemption for new residents)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Foreign-source income exempt for first 6 years of residency (extendable by 3); then worldwide.",
@@ -236,10 +318,17 @@
       "swr": 0.04,
       "safetyScore": 1.768,
       "safetyRank": 46,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Rentista visa available with proof of sufficient passive income. Citizenship after 2 years of residency.",
       "confidence": "low",
       "sources": [
-        { "name": "AFIP Argentina (resident worldwide taxation)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "AFIP Argentina (resident worldwide taxation)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "High inflation and currency controls historically; situation evolving rapidly under recent governments.",
@@ -257,10 +346,17 @@
       "swr": 0.04,
       "safetyScore": 1.371,
       "safetyRank": 7,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "urban",
       "residencyNote": "D7 passive-income visa: ~$870/mo for primary applicant. NHR program revised in 2024; replacement IFICI regime applies to qualifying high-skilled workers but not general retirees. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "Portugal Autoridade Tributária (NHR/IFICI program)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Portugal Autoridade Tributária (NHR/IFICI program)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "NHR 10% rate on foreign pensions phased out for new entrants after Mar 2024. New retirees default to standard progressive rates.",
@@ -278,10 +374,17 @@
       "swr": 0.04,
       "safetyScore": 1.578,
       "safetyRank": 25,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Non-Lucrative Visa: ~$2,800/mo passive income. Citizenship after 10 years (2 for Sephardic Jews / Ibero-Americans). EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "Agencia Tributaria Spain (worldwide income, wealth tax)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Agencia Tributaria Spain (worldwide income, wealth tax)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Spain taxes worldwide income progressively (19-47%). Wealth tax exists regionally — Madrid 100% rebate, Catalonia and others do not.",
@@ -299,10 +402,17 @@
       "swr": 0.04,
       "safetyScore": 1.662,
       "safetyRank": 33,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "urban",
       "residencyNote": "Elective Residence Visa: ~$3,000/mo passive income, no work. 7% flat tax on all foreign income for retirees relocating to qualifying towns (under 20k pop) in Southern Italy, for up to 9 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "Agenzia delle Entrate (7% retiree flat tax)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Agenzia delle Entrate (7% retiree flat tax)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "7% rate requires moving to a qualifying small Southern town. Outside that, taxes are progressive (23-43%).",
@@ -320,10 +430,17 @@
       "swr": 0.04,
       "safetyScore": 1.967,
       "safetyRank": 74,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Visiteur (long-stay visitor) visa for retirees with sufficient income (~$1,500/mo) and private health insurance. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "France Direction Générale des Finances Publiques (US-France treaty)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "France Direction Générale des Finances Publiques (US-France treaty)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "US-France tax treaty generally favorable for US-source retirement income (often taxed only in US).",
@@ -335,16 +452,23 @@
       "name": "Germany",
       "flag": "DE",
       "region": "Europe",
-      "colMultiplier": 1.0,
+      "colMultiplier": 1,
       "annualHealthcareUSD": 3000,
       "withdrawalTaxRate": 0.18,
       "swr": 0.04,
       "safetyScore": 1.53,
       "safetyRank": 20,
+      "dominantFaith": "Christian (mixed)",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "No dedicated retirement visa. Family-based, freelancer (Freiberufler), or self-employed visa pathways. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "Bundeszentralamt für Steuern (worldwide taxation for residents)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Bundeszentralamt für Steuern (worldwide taxation for residents)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Mandatory public health insurance for residents (GKV) or private (PKV) — coverage requirement is non-negotiable.",
@@ -362,10 +486,17 @@
       "swr": 0.04,
       "safetyScore": 1.491,
       "safetyRank": 14,
+      "dominantFaith": "Secular",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "No dedicated retirement visa. DAFT (Dutch-American Friendship Treaty) provides entrepreneur pathway. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "Belastingdienst Netherlands (Box 3 wealth taxation)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Belastingdienst Netherlands (Box 3 wealth taxation)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Box 3 wealth tax on investment assets — complex and subject to ongoing reform.",
@@ -383,10 +514,17 @@
       "swr": 0.04,
       "safetyScore": 1.294,
       "safetyRank": 5,
+      "dominantFaith": "Christian (mixed)",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "Forfait fiscal (lump-sum taxation) available to non-Swiss retirees in many cantons — tax based on lifestyle expenses rather than income.",
       "confidence": "medium",
       "sources": [
-        { "name": "Swiss Federal Tax Administration (forfait fiscal)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Swiss Federal Tax Administration (forfait fiscal)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Forfait fiscal makes Switzerland surprisingly competitive for high-net-worth retirees despite high COL.",
@@ -404,10 +542,17 @@
       "swr": 0.04,
       "safetyScore": 1.294,
       "safetyRank": 4,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "hard",
+      "englishLevel": "urban",
       "residencyNote": "Settlement Permit for financially independent persons (Niederlassungsbewilligung) requires demonstrating sufficient passive income.",
       "confidence": "medium",
       "sources": [
-        { "name": "Bundesministerium für Finanzen Austria", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Bundesministerium für Finanzen Austria",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Austria taxes worldwide income for residents at progressive rates.",
@@ -419,16 +564,23 @@
       "name": "Belgium",
       "flag": "BE",
       "region": "Europe",
-      "colMultiplier": 1.0,
+      "colMultiplier": 1,
       "annualHealthcareUSD": 2500,
       "withdrawalTaxRate": 0.2,
       "swr": 0.04,
       "safetyScore": 1.492,
       "safetyRank": 16,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "No dedicated retirement visa; income-based residency pathways exist. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "SPF Finances Belgium (worldwide taxation)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "SPF Finances Belgium (worldwide taxation)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "One of the higher overall tax burdens in Europe.",
@@ -446,10 +598,17 @@
       "swr": 0.04,
       "safetyScore": 1.26,
       "safetyRank": 2,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "medium",
+      "englishLevel": "widespread",
       "residencyNote": "Stamp 0 long-term residency for retirees of independent means: ~$56k/yr individual or $100k/yr couple. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "Revenue Commissioners Ireland", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Revenue Commissioners Ireland",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Among the most peaceful countries globally — top 5 consistently.",
@@ -467,10 +626,17 @@
       "swr": 0.04,
       "safetyScore": 1.634,
       "safetyRank": 30,
+      "dominantFaith": "Christian (mixed)",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "No retirement visa post-Brexit. Ancestry visa, family visa, or skilled worker route. ILR (settlement) after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "HMRC UK (residence and tax treaty with US)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "HMRC UK (residence and tax treaty with US)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "NHS available for residents after settlement; private supplement common.",
@@ -488,10 +654,17 @@
       "swr": 0.04,
       "safetyScore": 1.435,
       "safetyRank": 11,
+      "dominantFaith": "Secular",
+      "visaDifficulty": "hard",
+      "englishLevel": "urban",
       "residencyNote": "Long-term residence for purpose of family reunification, business, or study. No dedicated retirement visa.",
       "confidence": "medium",
       "sources": [
-        { "name": "Finanční správa Czech Republic", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Finanční správa Czech Republic",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Prague significantly more expensive than rest of country.",
@@ -509,10 +682,17 @@
       "swr": 0.04,
       "safetyScore": 1.713,
       "safetyRank": 36,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Temporary residence for financially independent persons. Permanent residence after 5 years. EU citizenship pathway after 8-10 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "Polish Tax Office (Krajowa Administracja Skarbowa)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Polish Tax Office (Krajowa Administracja Skarbowa)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Polish flat tax at 12-32% with relatively simple structure.",
@@ -530,10 +710,17 @@
       "swr": 0.04,
       "safetyScore": 1.409,
       "safetyRank": 9,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "hard",
+      "englishLevel": "urban",
       "residencyNote": "Temporary residence for sufficient means. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "FURS Slovenia (Financial Administration)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "FURS Slovenia (Financial Administration)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Among the top-10 most peaceful countries globally.",
@@ -551,10 +738,17 @@
       "swr": 0.04,
       "safetyScore": 1.519,
       "safetyRank": 19,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Temporary residence for retirees with sufficient passive income. Digital nomad visa also available. EU member since 2013; Schengen since 2023.",
       "confidence": "medium",
       "sources": [
-        { "name": "Croatia Tax Administration", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Croatia Tax Administration",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Coastal areas (Dalmatia, Istria) significantly more expensive than interior.",
@@ -572,10 +766,17 @@
       "swr": 0.04,
       "safetyScore": 1.764,
       "safetyRank": 45,
+      "dominantFaith": "Orthodox",
+      "visaDifficulty": "easy",
+      "englishLevel": "urban",
       "residencyNote": "Foreign pensioner program: 7% flat tax on all foreign-source income for 15 years for new tax residents who relocate from abroad. Golden Visa also available for property investment.",
       "confidence": "medium",
       "sources": [
-        { "name": "AADE Greece (7% foreign pension flat tax)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "AADE Greece (7% foreign pension flat tax)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "7% rate is significant for US retirees — among the most favorable EU regimes available.",
@@ -593,10 +794,17 @@
       "swr": 0.04,
       "safetyScore": 1.709,
       "safetyRank": 35,
+      "dominantFaith": "Secular",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "No retirement visa. Family or work-based pathways. Permanent residency after 5 years; citizenship after 8.",
       "confidence": "medium",
       "sources": [
-        { "name": "Skatteverket Sweden (worldwide taxation)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Skatteverket Sweden (worldwide taxation)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "High tax burden but excellent public services.",
@@ -614,10 +822,17 @@
       "swr": 0.04,
       "safetyScore": 1.644,
       "safetyRank": 32,
+      "dominantFaith": "Secular",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "Not in EU — Norway is EEA. Retirement requires demonstrating sufficient means; no specific retirement visa.",
       "confidence": "medium",
       "sources": [
-        { "name": "Skatteetaten Norway", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Skatteetaten Norway",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "High COL even by European standards.",
@@ -635,10 +850,17 @@
       "swr": 0.04,
       "safetyScore": 1.393,
       "safetyRank": 8,
+      "dominantFaith": "Secular",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "No retirement visa. Family reunification or work-based pathways. EU permanent residency after 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "Skattestyrelsen Denmark", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Skattestyrelsen Denmark",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Highest effective tax burden in the dataset; offset by strong public services.",
@@ -656,10 +878,17 @@
       "swr": 0.04,
       "safetyScore": 1.5,
       "safetyRank": 17,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Investor (Golden Visa) program relaunched in 2024 with $260k+ real-estate fund or $1.05M property investment. White card for digital nomads.",
       "confidence": "medium",
       "sources": [
-        { "name": "NAV Hungary (flat 15% personal income tax)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "NAV Hungary (flat 15% personal income tax)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Simple 15% flat tax on personal income.",
@@ -677,10 +906,17 @@
       "swr": 0.04,
       "safetyScore": 1.095,
       "safetyRank": 1,
+      "dominantFaith": "Protestant",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "Outside EU but in EEA. Long-term residence for sufficient means; no specific retirement visa.",
       "confidence": "medium",
       "sources": [
-        { "name": "Iceland Revenue and Customs (Skatturinn)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Iceland Revenue and Customs (Skatturinn)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "World's most peaceful country (GPI 2025 rank 1).",
@@ -698,10 +934,17 @@
       "swr": 0.04,
       "safetyScore": 1.559,
       "safetyRank": 24,
+      "dominantFaith": "Secular",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "Digital Nomad Visa for remote workers. No dedicated retirement visa; family or income-based pathways. EU residency after 5 years. E-Residency provides administrative access but not physical residency.",
       "confidence": "medium",
       "sources": [
-        { "name": "Estonian Tax and Customs Board", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Estonian Tax and Customs Board",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Flat 20% personal income tax (rising to ~22% in coming years).",
@@ -719,11 +962,22 @@
       "swr": 0.04,
       "safetyScore": 1.736,
       "safetyRank": 41,
+      "dominantFaith": "Christian (mixed)",
+      "visaDifficulty": "hard",
+      "englishLevel": "limited",
       "residencyNote": "F-2 long-term residency or F-5 permanent residency. No dedicated retirement visa; pathway requires prior residency, family ties, or qualifying income.",
       "confidence": "medium",
       "sources": [
-        { "name": "OECD Korea tax profile", "url": null, "lastVerified": "2026-05-17" },
-        { "name": "Korea National Health Insurance Service", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "OECD Korea tax profile",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        },
+        {
+          "name": "Korea National Health Insurance Service",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "COL multiplier (0.90) is higher than commonly assumed — Seoul is expensive for major appliances and housing.",
@@ -741,11 +995,22 @@
       "swr": 0.04,
       "safetyScore": 1.44,
       "safetyRank": 12,
+      "dominantFaith": "Secular",
+      "visaDifficulty": "hard",
+      "englishLevel": "limited",
       "residencyNote": "No dedicated retirement visa. Long-term resident or spouse-of-Japanese visa are common pathways. Highly Skilled Professional visa accelerates PR for qualifying workers.",
       "confidence": "medium",
       "sources": [
-        { "name": "OECD Japan tax profile", "url": null, "lastVerified": "2026-05-17" },
-        { "name": "Japan National Health Insurance", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "OECD Japan tax profile",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        },
+        {
+          "name": "Japan National Health Insurance",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Japan taxes worldwide income for residents after 5 of last 10 years in country.",
@@ -763,10 +1028,17 @@
       "swr": 0.04,
       "safetyScore": 1.73,
       "safetyRank": 40,
+      "dominantFaith": "Buddhist",
+      "visaDifficulty": "hard",
+      "englishLevel": "limited",
       "residencyNote": "Taiwan Gold Card available for qualifying professionals; APRC (permanent residency) achievable after sustained residency. Foreign-source income receives favorable treatment.",
       "confidence": "medium",
       "sources": [
-        { "name": "Taiwan Ministry of Finance (foreign-source income)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Taiwan Ministry of Finance (foreign-source income)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Foreign-source income generally favorable; jurisdiction-specific.",
@@ -784,10 +1056,17 @@
       "swr": 0.04,
       "safetyScore": 2.017,
       "safetyRank": 86,
+      "dominantFaith": "Buddhist",
+      "visaDifficulty": "easy",
+      "englishLevel": "urban",
       "residencyNote": "LTR visa: $80k+ passive income or $1M assets, 10-year stay. Retirement (O-A/O-X) visa: 50+, savings + monthly income proof. Thailand Privilege (Elite) visa: $14k-$70k+ membership.",
       "confidence": "medium",
       "sources": [
-        { "name": "Thailand Revenue Department (foreign income remittance)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Thailand Revenue Department (foreign income remittance)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "2024 rule change: foreign income remitted in any year is taxable for residents. Major reversal of prior loophole.",
@@ -805,10 +1084,17 @@
       "swr": 0.04,
       "safetyScore": 1.469,
       "safetyRank": 13,
+      "dominantFaith": "Muslim",
+      "visaDifficulty": "easy",
+      "englishLevel": "widespread",
       "residencyNote": "Malaysia My Second Home (MM2H): tiered Silver/Gold/Platinum with fixed deposit $150k-$1M and monthly income proof. 5-20 year renewable. English widely spoken.",
       "confidence": "medium",
       "sources": [
-        { "name": "Inland Revenue Board Malaysia (foreign-source exemption)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Inland Revenue Board Malaysia (foreign-source exemption)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Foreign-source income generally exempt from Malaysian tax for individuals; verify current rules.",
@@ -826,10 +1112,17 @@
       "swr": 0.04,
       "safetyScore": 1.721,
       "safetyRank": 38,
+      "dominantFaith": "Secular",
+      "visaDifficulty": "closed",
+      "englishLevel": "urban",
       "residencyNote": "No dedicated retirement visa. Most expats use 1- or 5-year tourist/business visa cycles or marriage-based residency. Investor visas with capital commitment.",
       "confidence": "low",
       "sources": [
-        { "name": "General Department of Taxation Vietnam", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "General Department of Taxation Vietnam",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Visa pathway is the dominant constraint, not the math.",
@@ -847,10 +1140,17 @@
       "swr": 0.04,
       "safetyScore": 1.357,
       "safetyRank": 6,
+      "dominantFaith": "Buddhist",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "Global Investor Programme requires $7.5M+ commitment. Long Term Visit Pass (LTVP) for parents of Singapore residents. No general retirement visa.",
       "confidence": "medium",
       "sources": [
-        { "name": "IRAS Singapore (territorial taxation)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "IRAS Singapore (territorial taxation)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Territorial tax: foreign-source income generally not taxed for individuals.",
@@ -868,10 +1168,17 @@
       "swr": 0.04,
       "safetyScore": 2.148,
       "safetyRank": 105,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "widespread",
       "residencyNote": "SRRV (Special Resident Retiree's Visa) at $10k-$50k deposit depending on age. Indefinite stay; multiple entries.",
       "confidence": "low",
       "sources": [
-        { "name": "Philippines Retirement Authority (SRRV)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Philippines Retirement Authority (SRRV)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "SRRV is one of the easier retirement visas in Asia.",
@@ -889,10 +1196,17 @@
       "swr": 0.04,
       "safetyScore": 1.786,
       "safetyRank": 49,
+      "dominantFaith": "Muslim",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
       "residencyNote": "Second Home Visa (B211B / KITAS) requires $130k+ deposit in Indonesian bank or property. Bali in particular has strong expat infrastructure.",
       "confidence": "low",
       "sources": [
-        { "name": "Indonesia Directorate General of Taxes", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Indonesia Directorate General of Taxes",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Second Home Visa requirements have changed multiple times since 2022.",
@@ -910,10 +1224,17 @@
       "swr": 0.04,
       "safetyScore": 2.019,
       "safetyRank": 87,
+      "dominantFaith": "Buddhist",
+      "visaDifficulty": "easy",
+      "englishLevel": "urban",
       "residencyNote": "ER (Retirement) visa renewable annually with minimal documentation; one of the easier visas in the region.",
       "confidence": "low",
       "sources": [
-        { "name": "General Department of Taxation Cambodia", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "General Department of Taxation Cambodia",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Visa is easy but private healthcare is limited; major medical needs typically require travel to Bangkok or Singapore.",
@@ -931,10 +1252,17 @@
       "swr": 0.04,
       "safetyScore": 1.783,
       "safetyRank": 47,
+      "dominantFaith": "Buddhist",
+      "visaDifficulty": "medium",
+      "englishLevel": "limited",
       "residencyNote": "Long-term visa via business setup or property investment. Less developed expat infrastructure than neighbors.",
       "confidence": "low",
       "sources": [
-        { "name": "Laos Tax Department", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Laos Tax Department",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "COL is approximate; Numbeo does not currently list Laos in its country index.",
@@ -948,14 +1276,21 @@
       "region": "Middle East & Africa",
       "colMultiplier": 0.8,
       "annualHealthcareUSD": 3500,
-      "withdrawalTaxRate": 0.0,
+      "withdrawalTaxRate": 0,
       "swr": 0.04,
       "safetyScore": 1.812,
       "safetyRank": 52,
+      "dominantFaith": "Muslim",
+      "visaDifficulty": "easy",
+      "englishLevel": "widespread",
       "residencyNote": "Retirement visa available to applicants 55+ with $545k property, $272k savings, or $54k/yr income. Renewable every 5 years.",
       "confidence": "medium",
       "sources": [
-        { "name": "UAE Federal Tax Authority (no personal income tax)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "UAE Federal Tax Authority (no personal income tax)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "No personal income tax — major draw for high-net-worth retirees.",
@@ -973,10 +1308,17 @@
       "swr": 0.04,
       "safetyScore": 3.108,
       "safetyRank": 155,
+      "dominantFaith": "Jewish",
+      "visaDifficulty": "medium",
+      "englishLevel": "widespread",
       "residencyNote": "Aliyah (Law of Return) for Jewish individuals provides immediate citizenship and 10-year exemption on foreign income/capital gains.",
       "confidence": "medium",
       "sources": [
-        { "name": "Israel Tax Authority (Aliyah 10-year exemption)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Israel Tax Authority (Aliyah 10-year exemption)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "10-year Aliyah tax exemption is one of the most generous regimes globally for those eligible.",
@@ -994,10 +1336,17 @@
       "swr": 0.04,
       "safetyScore": 2.852,
       "safetyRank": 146,
+      "dominantFaith": "Muslim",
+      "visaDifficulty": "medium",
+      "englishLevel": "limited",
       "residencyNote": "Citizenship by investment available with $400k+ property purchase (since 2022). Residence permit pathways for retirees.",
       "confidence": "low",
       "sources": [
-        { "name": "Turkey Revenue Administration", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Turkey Revenue Administration",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Severe currency volatility (lira) — significant FX risk for non-lira earners with lira expenses.",
@@ -1015,10 +1364,17 @@
       "swr": 0.04,
       "safetyScore": 2.012,
       "safetyRank": 85,
+      "dominantFaith": "Muslim",
+      "visaDifficulty": "medium",
+      "englishLevel": "limited",
       "residencyNote": "Long-term residence card available after legal stay. No specific retirement visa but income-based pathways accessible.",
       "confidence": "low",
       "sources": [
-        { "name": "Morocco Direction Générale des Impôts", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Morocco Direction Générale des Impôts",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Foreign-source pension income enjoys an 80% deduction — effective tax rate can be quite low.",
@@ -1036,10 +1392,17 @@
       "swr": 0.04,
       "safetyScore": 2.347,
       "safetyRank": 124,
+      "dominantFaith": "Christian (mixed)",
+      "visaDifficulty": "medium",
+      "englishLevel": "widespread",
       "residencyNote": "Retired Person's Permit: ~$2,000/mo passive income or $260k+ in income-generating assets.",
       "confidence": "low",
       "sources": [
-        { "name": "SARS South Africa (worldwide taxation)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "SARS South Africa (worldwide taxation)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Crime is a real factor; expat areas (Cape Town suburbs, Stellenbosch) typically safer than national average.",
@@ -1057,10 +1420,17 @@
       "swr": 0.04,
       "safetyScore": 1.586,
       "safetyRank": 26,
+      "dominantFaith": "Hindu",
+      "visaDifficulty": "easy",
+      "englishLevel": "widespread",
       "residencyNote": "Retired Non-Citizen Permit: $1,500/mo income or $18k+ initial deposit, then $1,500/mo. 10-year renewable. Multilingual (English/French/Creole).",
       "confidence": "medium",
       "sources": [
-        { "name": "Mauritius Revenue Authority", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Mauritius Revenue Authority",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "15% flat personal income tax — among the simplest tax systems globally.",
@@ -1078,10 +1448,17 @@
       "swr": 0.04,
       "safetyScore": 1.505,
       "safetyRank": 18,
+      "dominantFaith": "Christian (mixed)",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "Investor Retirement Visa (subclass 405) was closed in 2018. Current options: family-sponsored or skilled migration. Permanent residency via state nomination or family.",
       "confidence": "medium",
       "sources": [
-        { "name": "Australian Tax Office (worldwide taxation)", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Australian Tax Office (worldwide taxation)",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "No dedicated retirement visa makes legal residency the practical constraint.",
@@ -1099,10 +1476,17 @@
       "swr": 0.04,
       "safetyScore": 1.282,
       "safetyRank": 3,
+      "dominantFaith": "Christian (mixed)",
+      "visaDifficulty": "hard",
+      "englishLevel": "widespread",
       "residencyNote": "Parent Retirement Resident Visa: $740k investment + sufficient income. Active Investor Plus visa for high-net-worth applicants.",
       "confidence": "medium",
       "sources": [
-        { "name": "Inland Revenue New Zealand", "url": null, "lastVerified": "2026-05-17" }
+        {
+          "name": "Inland Revenue New Zealand",
+          "url": null,
+          "lastVerified": "2026-05-17"
+        }
       ],
       "caveats": [
         "Third most peaceful country globally (GPI 2025).",

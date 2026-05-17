@@ -14,11 +14,16 @@ const usCountry: Country = {
   swr: 0.04,
   safetyScore: 2.443,
   safetyRank: 128,
+  dominantFaith: 'Christian (mixed)',
+  visaDifficulty: 'easy',
+  englishLevel: 'widespread',
   residencyNote: '',
   confidence: 'high',
   sources: [],
   caveats: [],
 };
+
+const defaultFilters = { regions: [] as Country['region'][], safety: 'any' as const, faiths: [], visa: 'any' as const, english: 'any' as const };
 
 describe('yearsToTarget', () => {
   it('returns 0 when current savings already exceed target', () => {
@@ -148,56 +153,105 @@ describe('filterCountries', () => {
   const all = countriesData.countries as Country[];
 
   it('empty region list returns no region filter (matches all regions, modulo other filters)', () => {
-    const filtered = filterCountries(all, { regions: [], safety: 'any' });
+    const filtered = filterCountries(all, { ...defaultFilters });
     expect(filtered).toHaveLength(all.length);
   });
 
   it('all-regions selection equals no filter', () => {
-    const filtered = filterCountries(all, { regions: [...ALL_REGIONS], safety: 'any' });
+    const filtered = filterCountries(all, { ...defaultFilters, regions: [...ALL_REGIONS] });
     expect(filtered).toHaveLength(all.length);
   });
 
   it('single region filter keeps only that region', () => {
-    const filtered = filterCountries(all, { regions: ['Europe'], safety: 'any' });
+    const filtered = filterCountries(all, { ...defaultFilters, regions: ['Europe'] });
     expect(filtered.length).toBeGreaterThan(0);
     expect(filtered.every((c) => c.region === 'Europe')).toBe(true);
   });
 
   it('multi-region filter keeps any matching region', () => {
     const regions: Region[] = ['Americas', 'Europe'];
-    const filtered = filterCountries(all, { regions, safety: 'any' });
+    const filtered = filterCountries(all, { ...defaultFilters, regions });
     expect(filtered.every((c) => regions.includes(c.region))).toBe(true);
   });
 
   it('very-safe threshold keeps only GPI ≤ 1.5', () => {
-    const filtered = filterCountries(all, { regions: [], safety: 'very-safe' });
+    const filtered = filterCountries(all, { ...defaultFilters, safety: 'very-safe' });
     expect(filtered.every((c) => c.safetyScore <= 1.5)).toBe(true);
     expect(filtered.length).toBeGreaterThan(0);
   });
 
   it('safe threshold keeps only GPI ≤ 2.0', () => {
-    const filtered = filterCountries(all, { regions: [], safety: 'safe' });
+    const filtered = filterCountries(all, { ...defaultFilters, safety: 'safe' });
     expect(filtered.every((c) => c.safetyScore <= 2.0)).toBe(true);
   });
 
   it('moderate threshold keeps only GPI ≤ 2.5', () => {
-    const filtered = filterCountries(all, { regions: [], safety: 'moderate' });
+    const filtered = filterCountries(all, { ...defaultFilters, safety: 'moderate' });
     expect(filtered.every((c) => c.safetyScore <= 2.5)).toBe(true);
   });
 
   it('region and safety filters compose with AND semantics', () => {
-    const filtered = filterCountries(all, { regions: ['Europe'], safety: 'very-safe' });
+    const filtered = filterCountries(all, { ...defaultFilters, regions: ['Europe'], safety: 'very-safe' });
     expect(filtered.every((c) => c.region === 'Europe' && c.safetyScore <= 1.5)).toBe(true);
   });
 
   it('Iceland (rank 1) survives the very-safe Europe filter', () => {
-    const filtered = filterCountries(all, { regions: ['Europe'], safety: 'very-safe' });
+    const filtered = filterCountries(all, { ...defaultFilters, regions: ['Europe'], safety: 'very-safe' });
     expect(filtered.some((c) => c.id === 'is')).toBe(true);
   });
 
   it('Mexico (rank 135) is excluded by the safe filter', () => {
-    const filtered = filterCountries(all, { regions: [], safety: 'safe' });
+    const filtered = filterCountries(all, { ...defaultFilters, safety: 'safe' });
     expect(filtered.some((c) => c.id === 'mx')).toBe(false);
+  });
+
+  it('faith filter keeps only countries with the selected faiths', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, faiths: ['Catholic'] });
+    expect(filtered.length).toBeGreaterThan(0);
+    expect(filtered.every((c) => c.dominantFaith === 'Catholic')).toBe(true);
+  });
+
+  it('multi-faith filter keeps any of the selected faiths', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, faiths: ['Catholic', 'Orthodox'] });
+    expect(filtered.every((c) => c.dominantFaith === 'Catholic' || c.dominantFaith === 'Orthodox')).toBe(true);
+  });
+
+  it('visa=easy keeps only easy-retirement-visa countries', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, visa: 'easy' });
+    expect(filtered.every((c) => c.visaDifficulty === 'easy')).toBe(true);
+    expect(filtered.length).toBeGreaterThan(0);
+  });
+
+  it('visa=hard includes easy/medium/hard but excludes closed', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, visa: 'hard' });
+    expect(filtered.every((c) => c.visaDifficulty !== 'closed')).toBe(true);
+  });
+
+  it('english=widespread keeps only widespread-English countries', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, english: 'widespread' });
+    expect(filtered.every((c) => c.englishLevel === 'widespread')).toBe(true);
+    expect(filtered.length).toBeGreaterThan(0);
+  });
+
+  it('english=urban keeps urban OR widespread (at-least semantics)', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, english: 'urban' });
+    expect(filtered.every((c) => c.englishLevel === 'urban' || c.englishLevel === 'widespread')).toBe(true);
+  });
+
+  it('all filters compose: Catholic + Europe + easy visa + urban English', () => {
+    const filtered = filterCountries(all, {
+      ...defaultFilters,
+      regions: ['Europe'],
+      faiths: ['Catholic'],
+      visa: 'easy',
+      english: 'urban',
+    });
+    expect(filtered.every((c) =>
+      c.region === 'Europe' &&
+      c.dominantFaith === 'Catholic' &&
+      c.visaDifficulty === 'easy' &&
+      (c.englishLevel === 'urban' || c.englishLevel === 'widespread')
+    )).toBe(true);
   });
 });
 
@@ -221,6 +275,9 @@ describe('countries.json integrity', () => {
       expect(['high', 'medium', 'low']).toContain(c.confidence);
       expect(Array.isArray(c.sources)).toBe(true);
       expect(c.sources.length).toBeGreaterThan(0);
+      expect(c.dominantFaith).toBeTruthy();
+      expect(['easy', 'medium', 'hard', 'closed']).toContain(c.visaDifficulty);
+      expect(['widespread', 'urban', 'limited']).toContain(c.englishLevel);
     }
   });
 
