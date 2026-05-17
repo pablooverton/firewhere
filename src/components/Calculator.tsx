@@ -5,6 +5,7 @@ import { computeAll, filterCountries } from '@/domain/fire';
 import {
   ALL_REGIONS,
   type Country,
+  type DataSource,
   type FilterCriteria,
   type Region,
   type SafetyThreshold,
@@ -13,7 +14,7 @@ import {
 
 interface Props {
   countries: Country[];
-  safetySource: { name: string; url: string };
+  dataSources: { safety: DataSource; costOfLiving: DataSource };
 }
 
 const defaultInputs: UserInputs = {
@@ -69,7 +70,8 @@ function safetyColor(score: number): string {
   return 'bg-red-900/40 text-red-300 border-red-800';
 }
 
-export function Calculator({ countries, safetySource }: Props) {
+export function Calculator({ countries, dataSources }: Props) {
+  const safetySource = dataSources.safety;
   const [inputs, setInputs] = useState<UserInputs>(defaultInputs);
   const [filters, setFilters] = useState<FilterCriteria>(defaultFilters);
 

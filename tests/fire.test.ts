@@ -12,8 +12,8 @@ const usCountry: Country = {
   annualHealthcareUSD: 12000,
   withdrawalTaxRate: 0.12,
   swr: 0.04,
-  safetyScore: 2.44,
-  safetyRank: 132,
+  safetyScore: 2.443,
+  safetyRank: 128,
   residencyNote: '',
   confidence: 'high',
   sources: [],
@@ -101,6 +101,13 @@ describe('computeCountryFire', () => {
     const result = computeCountryFire(baseUser, medCountry);
     expect(result.confidence).toBe('medium');
   });
+
+  it('tax-free country (UAE) has lower FIRE number than taxed equivalent', () => {
+    const taxFree: Country = { ...usCountry, id: 'tf', withdrawalTaxRate: 0 };
+    const tfResult = computeCountryFire(baseUser, taxFree);
+    const usResult = computeCountryFire(baseUser, usCountry);
+    expect(tfResult.fireNumber).toBeLessThan(usResult.fireNumber);
+  });
 });
 
 describe('computeAll', () => {
@@ -119,7 +126,7 @@ describe('computeAll', () => {
     }
   });
 
-  it('Vietnam (lowest COL in dataset) ranks earlier than US baseline', () => {
+  it('lowest-COL countries rank earlier than US baseline', () => {
     const user: UserInputs = {
       currentSavings: 200_000,
       annualSavings: 40_000,
@@ -129,8 +136,11 @@ describe('computeAll', () => {
     };
     const results = computeAll(user, countriesData.countries as Country[]);
     const usIdx = results.findIndex((r) => r.countryId === 'us');
+    // Vietnam (0.38) and Laos (0.35) are among the lowest-COL — both should rank earlier
     const vnIdx = results.findIndex((r) => r.countryId === 'vn');
+    const laIdx = results.findIndex((r) => r.countryId === 'la');
     expect(vnIdx).toBeLessThan(usIdx);
+    expect(laIdx).toBeLessThan(usIdx);
   });
 });
 
@@ -179,6 +189,16 @@ describe('filterCountries', () => {
     const filtered = filterCountries(all, { regions: ['Europe'], safety: 'very-safe' });
     expect(filtered.every((c) => c.region === 'Europe' && c.safetyScore <= 1.5)).toBe(true);
   });
+
+  it('Iceland (rank 1) survives the very-safe Europe filter', () => {
+    const filtered = filterCountries(all, { regions: ['Europe'], safety: 'very-safe' });
+    expect(filtered.some((c) => c.id === 'is')).toBe(true);
+  });
+
+  it('Mexico (rank 135) is excluded by the safe filter', () => {
+    const filtered = filterCountries(all, { regions: [], safety: 'safe' });
+    expect(filtered.some((c) => c.id === 'mx')).toBe(false);
+  });
 });
 
 describe('countries.json integrity', () => {
@@ -216,7 +236,18 @@ describe('countries.json integrity', () => {
     }
   });
 
-  it('safety source has a valid Wikipedia URL', () => {
-    expect(countriesData.safetySource.url).toMatch(/^https:\/\/en\.wikipedia\.org\//);
+  it('dataSources points to wikipedia + numbeo with valid URLs', () => {
+    expect(countriesData.dataSources.safety.url).toMatch(/^https:\/\/en\.wikipedia\.org\//);
+    expect(countriesData.dataSources.costOfLiving.url).toMatch(/^https:\/\/(www\.)?numbeo\.com\//);
+  });
+
+  it('dataset includes at least 45 countries (top-50 scale)', () => {
+    expect(countriesData.countries.length).toBeGreaterThanOrEqual(45);
+  });
+
+  it('safety ranks are consistent: lower rank means lower score', () => {
+    // GPI score and rank should correlate strongly. Sample a few high/low pairs.
+    const byRank = [...countriesData.countries].sort((a, b) => a.safetyRank - b.safetyRank);
+    expect(byRank[0].safetyScore).toBeLessThan(byRank[byRank.length - 1].safetyScore);
   });
 });

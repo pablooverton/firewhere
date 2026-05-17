@@ -1,4 +1,10 @@
-export type Region = 'Americas' | 'Europe' | 'East Asia' | 'Southeast Asia';
+export type Region =
+  | 'Americas'
+  | 'Europe'
+  | 'East Asia'
+  | 'Southeast Asia'
+  | 'Middle East & Africa'
+  | 'Oceania';
 
 export interface UserInputs {
   /** Current liquid savings in USD. */
@@ -36,11 +42,24 @@ export interface Country {
   caveats: string[];
 }
 
+export interface DataSource {
+  name: string;
+  url: string;
+  publisher: string;
+  updateFrequency: string;
+  lastVerified: string;
+  note?: string;
+}
+
 export interface CountryDataFile {
   version: string;
   lastUpdated: string;
+  lastReviewed: string;
   schema: Record<string, string>;
-  safetySource: { name: string; url: string; lastVerified: string; note: string };
+  dataSources: {
+    safety: DataSource;
+    costOfLiving: DataSource;
+  };
   countries: Country[];
 }
 
@@ -76,4 +95,11 @@ export const SAFETY_THRESHOLD_SCORE: Record<SafetyThreshold, number> = {
   'very-safe': 1.5,
 };
 
-export const ALL_REGIONS: Region[] = ['Americas', 'Europe', 'East Asia', 'Southeast Asia'];
+export const ALL_REGIONS: Region[] = [
+  'Americas',
+  'Europe',
+  'East Asia',
+  'Southeast Asia',
+  'Middle East & Africa',
+  'Oceania',
+];
