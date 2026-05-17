@@ -14,16 +14,17 @@ export default function HomePage() {
         </p>
       </header>
 
-      <Calculator countries={countries} />
+      <Calculator countries={countries} safetySource={countriesData.safetySource} />
 
       <footer className="mt-16 pt-8 border-t border-gray-800 text-sm text-gray-500 space-y-2">
         <p>
-          Directional, not advisory. Cost-of-living and tax parameters are public-source estimates
-          with the confidence flag shown per country. For full retirement modeling (Monte Carlo,
-          Roth conversion, Social Security timing, sequence-of-returns), use a dedicated planner.
+          Directional, not advisory. Cost-of-living, tax, and safety parameters are public-source
+          estimates with the confidence flag shown per country. For full retirement modeling
+          (Monte Carlo, Roth conversion, Social Security timing, sequence-of-returns), use a
+          dedicated planner.
         </p>
         <p>
-          Data version {countriesData.version} · last updated {countriesData.lastUpdated}
+          Data version {countriesData.version} · last updated {countriesData.lastUpdated} · {countries.length} countries
         </p>
       </footer>
     </main>

@@ -1,4 +1,5 @@
-import type { Country, FireResult, UserInputs } from './types';
+import type { Country, FilterCriteria, FireResult, UserInputs } from './types';
+import { SAFETY_THRESHOLD_SCORE } from './types';
 
 /**
  * Closed-form solve for the number of years until a portfolio with periodic
@@ -83,4 +84,22 @@ export function computeAll(user: UserInputs, countries: Country[]): FireResult[]
   return countries
     .map((c) => computeCountryFire(user, c))
     .sort((a, b) => a.fireAge - b.fireAge);
+}
+
+/**
+ * Filter countries by region and safety threshold.
+ *
+ * - If `regions` is empty, no region filter is applied (matches all).
+ * - Safety: keep countries with safetyScore <= threshold's upper bound.
+ *   'any' keeps all; 'very-safe' keeps GPI ≤ 1.5; 'safe' keeps ≤ 2.0; 'moderate' keeps ≤ 2.5.
+ */
+export function filterCountries(countries: Country[], criteria: FilterCriteria): Country[] {
+  const safetyMax = SAFETY_THRESHOLD_SCORE[criteria.safety];
+  const regionSet = criteria.regions.length === 0 ? null : new Set(criteria.regions);
+
+  return countries.filter((c) => {
+    if (regionSet && !regionSet.has(c.region)) return false;
+    if (c.safetyScore > safetyMax) return false;
+    return true;
+  });
 }

@@ -1,3 +1,5 @@
+export type Region = 'Americas' | 'Europe' | 'East Asia' | 'Southeast Asia';
+
 export interface UserInputs {
   /** Current liquid savings in USD. */
   currentSavings: number;
@@ -15,6 +17,7 @@ export interface Country {
   id: string;
   name: string;
   flag: string;
+  region: Region;
   /** Multiplier on user's USD baseline spending. 1.00 = US baseline. */
   colMultiplier: number;
   /** Additive baseline annual healthcare cost in USD for a retired adult / small family. */
@@ -23,6 +26,10 @@ export interface Country {
   withdrawalTaxRate: number;
   /** Suggested safe withdrawal rate baseline. */
   swr: number;
+  /** Global Peace Index score. 1.0 = most peaceful, ~3.5 = least. Lower is safer. */
+  safetyScore: number;
+  /** GPI rank out of ~163 countries. Lower is safer. */
+  safetyRank: number;
   residencyNote: string;
   confidence: 'high' | 'medium' | 'low';
   sources: Array<{ name: string; url: string | null; lastVerified: string }>;
@@ -33,6 +40,7 @@ export interface CountryDataFile {
   version: string;
   lastUpdated: string;
   schema: Record<string, string>;
+  safetySource: { name: string; url: string; lastVerified: string; note: string };
   countries: Country[];
 }
 
@@ -52,3 +60,20 @@ export interface FireResult {
   alreadyFire: boolean;
   confidence: 'high' | 'medium' | 'low';
 }
+
+export type SafetyThreshold = 'any' | 'very-safe' | 'safe' | 'moderate';
+
+export interface FilterCriteria {
+  regions: Region[];
+  safety: SafetyThreshold;
+}
+
+/** Upper-bound GPI score per safety threshold. Lower GPI = more peaceful. */
+export const SAFETY_THRESHOLD_SCORE: Record<SafetyThreshold, number> = {
+  any: Infinity,
+  moderate: 2.5,
+  safe: 2.0,
+  'very-safe': 1.5,
+};
+
+export const ALL_REGIONS: Region[] = ['Americas', 'Europe', 'East Asia', 'Southeast Asia'];

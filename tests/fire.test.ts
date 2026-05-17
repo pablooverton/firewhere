@@ -1,16 +1,19 @@
 import { describe, it, expect } from 'vitest';
-import { computeCountryFire, computeAll, yearsToTarget } from '../src/domain/fire';
-import type { Country, UserInputs } from '../src/domain/types';
+import { computeCountryFire, computeAll, filterCountries, yearsToTarget } from '../src/domain/fire';
+import { ALL_REGIONS, type Country, type Region, type UserInputs } from '../src/domain/types';
 import countriesData from '../src/data/countries.json';
 
 const usCountry: Country = {
   id: 'us',
   name: 'United States',
   flag: 'US',
+  region: 'Americas',
   colMultiplier: 1.0,
   annualHealthcareUSD: 12000,
   withdrawalTaxRate: 0.12,
   swr: 0.04,
+  safetyScore: 2.44,
+  safetyRank: 132,
   residencyNote: '',
   confidence: 'high',
   sources: [],
@@ -116,7 +119,7 @@ describe('computeAll', () => {
     }
   });
 
-  it('Taiwan (lowest COL in dataset) ranks earlier than US baseline', () => {
+  it('Vietnam (lowest COL in dataset) ranks earlier than US baseline', () => {
     const user: UserInputs = {
       currentSavings: 200_000,
       annualSavings: 40_000,
@@ -126,8 +129,55 @@ describe('computeAll', () => {
     };
     const results = computeAll(user, countriesData.countries as Country[]);
     const usIdx = results.findIndex((r) => r.countryId === 'us');
-    const twIdx = results.findIndex((r) => r.countryId === 'tw');
-    expect(twIdx).toBeLessThan(usIdx);
+    const vnIdx = results.findIndex((r) => r.countryId === 'vn');
+    expect(vnIdx).toBeLessThan(usIdx);
+  });
+});
+
+describe('filterCountries', () => {
+  const all = countriesData.countries as Country[];
+
+  it('empty region list returns no region filter (matches all regions, modulo other filters)', () => {
+    const filtered = filterCountries(all, { regions: [], safety: 'any' });
+    expect(filtered).toHaveLength(all.length);
+  });
+
+  it('all-regions selection equals no filter', () => {
+    const filtered = filterCountries(all, { regions: [...ALL_REGIONS], safety: 'any' });
+    expect(filtered).toHaveLength(all.length);
+  });
+
+  it('single region filter keeps only that region', () => {
+    const filtered = filterCountries(all, { regions: ['Europe'], safety: 'any' });
+    expect(filtered.length).toBeGreaterThan(0);
+    expect(filtered.every((c) => c.region === 'Europe')).toBe(true);
+  });
+
+  it('multi-region filter keeps any matching region', () => {
+    const regions: Region[] = ['Americas', 'Europe'];
+    const filtered = filterCountries(all, { regions, safety: 'any' });
+    expect(filtered.every((c) => regions.includes(c.region))).toBe(true);
+  });
+
+  it('very-safe threshold keeps only GPI ≤ 1.5', () => {
+    const filtered = filterCountries(all, { regions: [], safety: 'very-safe' });
+    expect(filtered.every((c) => c.safetyScore <= 1.5)).toBe(true);
+    expect(filtered.length).toBeGreaterThan(0);
+  });
+
+  it('safe threshold keeps only GPI ≤ 2.0', () => {
+    const filtered = filterCountries(all, { regions: [], safety: 'safe' });
+    expect(filtered.every((c) => c.safetyScore <= 2.0)).toBe(true);
+  });
+
+  it('moderate threshold keeps only GPI ≤ 2.5', () => {
+    const filtered = filterCountries(all, { regions: [], safety: 'moderate' });
+    expect(filtered.every((c) => c.safetyScore <= 2.5)).toBe(true);
+  });
+
+  it('region and safety filters compose with AND semantics', () => {
+    const filtered = filterCountries(all, { regions: ['Europe'], safety: 'very-safe' });
+    expect(filtered.every((c) => c.region === 'Europe' && c.safetyScore <= 1.5)).toBe(true);
   });
 });
 
@@ -136,6 +186,7 @@ describe('countries.json integrity', () => {
     for (const c of countriesData.countries) {
       expect(c.id).toBeTruthy();
       expect(c.name).toBeTruthy();
+      expect(ALL_REGIONS).toContain(c.region as Region);
       expect(c.colMultiplier).toBeGreaterThan(0);
       expect(c.colMultiplier).toBeLessThan(3);
       expect(c.annualHealthcareUSD).toBeGreaterThanOrEqual(0);
@@ -143,6 +194,10 @@ describe('countries.json integrity', () => {
       expect(c.withdrawalTaxRate).toBeLessThan(1);
       expect(c.swr).toBeGreaterThan(0);
       expect(c.swr).toBeLessThan(0.1);
+      expect(c.safetyScore).toBeGreaterThan(0);
+      expect(c.safetyScore).toBeLessThan(5);
+      expect(c.safetyRank).toBeGreaterThan(0);
+      expect(c.safetyRank).toBeLessThan(200);
       expect(['high', 'medium', 'low']).toContain(c.confidence);
       expect(Array.isArray(c.sources)).toBe(true);
       expect(c.sources.length).toBeGreaterThan(0);
@@ -152,5 +207,16 @@ describe('countries.json integrity', () => {
   it('country IDs are unique', () => {
     const ids = countriesData.countries.map((c) => c.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('every region is represented by at least one country', () => {
+    const regions = new Set(countriesData.countries.map((c) => c.region));
+    for (const r of ALL_REGIONS) {
+      expect(regions.has(r)).toBe(true);
+    }
+  });
+
+  it('safety source has a valid Wikipedia URL', () => {
+    expect(countriesData.safetySource.url).toMatch(/^https:\/\/en\.wikipedia\.org\//);
   });
 });

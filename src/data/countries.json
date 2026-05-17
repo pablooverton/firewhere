@@ -1,22 +1,34 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "lastUpdated": "2026-05-17",
   "schema": {
+    "region": "One of: Americas, Europe, East Asia, Southeast Asia.",
     "colMultiplier": "Multiplier applied to user's USD baseline spending. 1.00 = US baseline.",
     "annualHealthcareUSD": "Additive baseline annual healthcare cost in USD for a retired adult / small family. Conservative midpoint.",
     "withdrawalTaxRate": "Approximate effective tax rate on retirement withdrawals for a moderate-income retiree. Heuristic — not a substitute for individualized tax modeling.",
     "swr": "Suggested safe withdrawal rate baseline for this country.",
+    "safetyScore": "Global Peace Index score (1.0 = most peaceful, ~3.5 = least). Lower is safer.",
+    "safetyRank": "GPI rank out of ~163 countries. Lower is safer.",
     "confidence": "high | medium | low — reflects how well-supported the parameter set is by public data."
+  },
+  "safetySource": {
+    "name": "Global Peace Index (Wikipedia)",
+    "url": "https://en.wikipedia.org/wiki/Global_Peace_Index",
+    "lastVerified": "2026-05-17",
+    "note": "GPI scores are approximate values from recent annual reports; verify against the current Wikipedia table before publishing."
   },
   "countries": [
     {
       "id": "us",
       "name": "United States",
       "flag": "US",
-      "colMultiplier": 1.00,
+      "region": "Americas",
+      "colMultiplier": 1.0,
       "annualHealthcareUSD": 12000,
       "withdrawalTaxRate": 0.12,
-      "swr": 0.040,
+      "swr": 0.04,
+      "safetyScore": 2.44,
+      "safetyRank": 132,
       "residencyNote": "Default base case. Healthcare estimate assumes pre-Medicare ACA marketplace coverage for a retired couple.",
       "confidence": "high",
       "sources": [
@@ -26,17 +38,141 @@
       ],
       "caveats": [
         "Withdrawal tax rate assumes mixed taxable/IRA/Roth portfolio at a moderate income level. Heavy pre-tax skews higher; heavy Roth skews lower.",
-        "Healthcare baseline excludes long-term care."
+        "Healthcare baseline excludes long-term care.",
+        "Safety score reflects national average; varies enormously by state and city."
+      ]
+    },
+    {
+      "id": "mx",
+      "name": "Mexico",
+      "flag": "MX",
+      "region": "Americas",
+      "colMultiplier": 0.45,
+      "annualHealthcareUSD": 3000,
+      "withdrawalTaxRate": 0.1,
+      "swr": 0.04,
+      "safetyScore": 2.79,
+      "safetyRank": 140,
+      "residencyNote": "Temporary Resident visa (4 years renewable) requires roughly $4,300/mo income or ~$72k in savings. Permanent Resident after 4 years or with higher financial thresholds.",
+      "confidence": "medium",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (CDMX vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "SAT Mexico tax authority (foreign income treatment)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Wikipedia: Visa policy of Mexico", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "Safety varies dramatically by state; expat retirement hubs (San Miguel de Allende, Mérida, Lake Chapala) are far safer than national average.",
+        "Mexico taxes worldwide income for residents (>183 days/yr); non-residents taxed on Mexican-source only.",
+        "Private healthcare for retirees is excellent and inexpensive; public IMSS available after residency."
+      ]
+    },
+    {
+      "id": "cr",
+      "name": "Costa Rica",
+      "flag": "CR",
+      "region": "Americas",
+      "colMultiplier": 0.55,
+      "annualHealthcareUSD": 2500,
+      "withdrawalTaxRate": 0.08,
+      "swr": 0.04,
+      "safetyScore": 1.71,
+      "safetyRank": 39,
+      "residencyNote": "Pensionado visa: $1,000/mo lifetime pension. Rentista: $2,500/mo for 2 years or $60k deposit. Inversionista: $150k investment. No standing army since 1948.",
+      "confidence": "medium",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (San José vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Costa Rica Ministerio de Hacienda (foreign-source income)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Wikipedia: Visa policy of Costa Rica", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "Foreign-source income (including US retirement accounts) generally exempt from Costa Rican income tax.",
+        "Healthcare via Caja (CCSS) is mandatory for residents; supplements with private insurance common.",
+        "Most peaceful country in Central America; tourist-heavy areas have petty theft risk."
+      ]
+    },
+    {
+      "id": "pt",
+      "name": "Portugal",
+      "flag": "PT",
+      "region": "Europe",
+      "colMultiplier": 0.55,
+      "annualHealthcareUSD": 1500,
+      "withdrawalTaxRate": 0.1,
+      "swr": 0.04,
+      "safetyScore": 1.31,
+      "safetyRank": 7,
+      "residencyNote": "D7 passive-income visa: ~$870/mo for primary applicant plus dependents. NHR (Non-Habitual Resident) tax regime previously offered 10% on foreign pensions — program revised in 2024, transitional rules apply. EU residency after 5 years.",
+      "confidence": "medium",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (Lisbon vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Portugal Autoridade Tributária (NHR program rules)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Wikipedia: Healthcare in Portugal", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "Lisbon and Porto have seen significant cost increases since 2020; smaller cities (Coimbra, Braga, Aveiro) closer to baseline.",
+        "NHR program changes in 2024 reduced the foreign-pension benefit for new entrants.",
+        "Among the top 10 most peaceful countries globally; very low violent crime."
+      ]
+    },
+    {
+      "id": "es",
+      "name": "Spain",
+      "flag": "ES",
+      "region": "Europe",
+      "colMultiplier": 0.6,
+      "annualHealthcareUSD": 2000,
+      "withdrawalTaxRate": 0.18,
+      "swr": 0.04,
+      "safetyScore": 1.69,
+      "safetyRank": 32,
+      "residencyNote": "Non-Lucrative Visa: ~$2,800/mo passive income. Path to citizenship after 10 years (or 2 for Sephardic Jews / Ibero-Americans). EU residency unlocked after 5 years.",
+      "confidence": "medium",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (Madrid vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Agencia Tributaria Spain (worldwide income for residents)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Wikipedia: Visa policy of Spain", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "Spain taxes worldwide income at progressive rates (19-47%). Beckham Law (24% flat on Spanish income) applies to workers, not retirees.",
+        "Wealth tax exists at the regional level; Madrid has 100% rebate, Catalonia and others do not.",
+        "Public healthcare (SNS) excellent for residents; private supplements common."
+      ]
+    },
+    {
+      "id": "it",
+      "name": "Italy",
+      "flag": "IT",
+      "region": "Europe",
+      "colMultiplier": 0.62,
+      "annualHealthcareUSD": 1500,
+      "withdrawalTaxRate": 0.07,
+      "swr": 0.04,
+      "safetyScore": 1.7,
+      "safetyRank": 34,
+      "residencyNote": "Elective Residence Visa: ~$3,000/mo passive income, no work permitted. 7% flat tax on all foreign income available for retirees moving to towns under 20,000 in Southern Italy (Abruzzo, Molise, Puglia, etc.) for up to 9 years.",
+      "confidence": "medium",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (Rome vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Agenzia delle Entrate Italy (7% retiree flat tax)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Wikipedia: Visa policy of Italy", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "The 7% flat tax requires moving to a qualifying small Southern town. Outside that, taxes are 23-43% progressive on worldwide income.",
+        "Public healthcare (SSN) is universal; quality varies significantly by region (Northern > Southern).",
+        "Tax rate shown assumes the 7% flat-tax regime."
       ]
     },
     {
       "id": "kr",
       "name": "South Korea",
       "flag": "KR",
+      "region": "East Asia",
       "colMultiplier": 0.62,
       "annualHealthcareUSD": 3500,
       "withdrawalTaxRate": 0.08,
-      "swr": 0.040,
+      "swr": 0.04,
+      "safetyScore": 1.78,
+      "safetyRank": 43,
       "residencyNote": "F-2 long-term residency or F-5 permanent residency pathways exist. No dedicated retirement visa; pathway typically requires prior residency, marriage, or qualifying income.",
       "confidence": "medium",
       "sources": [
@@ -54,10 +190,13 @@
       "id": "jp",
       "name": "Japan",
       "flag": "JP",
+      "region": "East Asia",
       "colMultiplier": 0.68,
       "annualHealthcareUSD": 3000,
-      "withdrawalTaxRate": 0.10,
-      "swr": 0.040,
+      "withdrawalTaxRate": 0.1,
+      "swr": 0.04,
+      "safetyScore": 1.34,
+      "safetyRank": 9,
       "residencyNote": "No dedicated retirement visa. Long-term resident or spouse-of-Japanese visa are common pathways. Japan Highly Skilled Professional visa accelerates permanent residency for qualifying workers.",
       "confidence": "medium",
       "sources": [
@@ -75,10 +214,13 @@
       "id": "tw",
       "name": "Taiwan",
       "flag": "TW",
+      "region": "East Asia",
       "colMultiplier": 0.55,
       "annualHealthcareUSD": 1500,
       "withdrawalTaxRate": 0.05,
-      "swr": 0.040,
+      "swr": 0.04,
+      "safetyScore": 1.7,
+      "safetyRank": 33,
       "residencyNote": "Taiwan Gold Card available for qualifying professionals; APRC (permanent residency) achievable after sustained residency. Foreign-sourced income receives favorable treatment for new residents.",
       "confidence": "medium",
       "sources": [
@@ -90,6 +232,79 @@
         "Foreign-source income (including US retirement accounts) generally enjoys favorable treatment — modeled here as low effective rate, but jurisdiction-specific.",
         "NHI is one of the cheapest comprehensive systems in the developed world.",
         "Cross-strait political risk is not modeled — outside the scope of a FIRE calculator."
+      ]
+    },
+    {
+      "id": "th",
+      "name": "Thailand",
+      "flag": "TH",
+      "region": "Southeast Asia",
+      "colMultiplier": 0.4,
+      "annualHealthcareUSD": 2000,
+      "withdrawalTaxRate": 0.1,
+      "swr": 0.04,
+      "safetyScore": 2.07,
+      "safetyRank": 92,
+      "residencyNote": "Long-Term Resident (LTR) visa: $80k+ passive income or $1M assets, 10-year stay. Retirement (O-A/O-X) visa: 50+, $25k savings + $2k/mo income or $80k savings. Thailand Privilege (Elite) visa: $14k-$70k+ membership fees.",
+      "confidence": "low",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (Bangkok vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Thailand Revenue Department (foreign income remittance rules)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Wikipedia: Visa policy of Thailand", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "2024 rule change: foreign income remitted in any year (not just same year) is taxable for residents. Major reversal of previous loophole.",
+        "Chiang Mai and Hua Hin meaningfully cheaper than Bangkok. Phuket more expensive.",
+        "Private healthcare excellent in Bangkok/Phuket; rural areas limited.",
+        "Southern provinces near Malaysian border have insurgent activity — not relevant to expat retirement areas but reflected in national GPI."
+      ]
+    },
+    {
+      "id": "my",
+      "name": "Malaysia",
+      "flag": "MY",
+      "region": "Southeast Asia",
+      "colMultiplier": 0.4,
+      "annualHealthcareUSD": 2000,
+      "withdrawalTaxRate": 0.08,
+      "swr": 0.04,
+      "safetyScore": 1.45,
+      "safetyRank": 19,
+      "residencyNote": "Malaysia My Second Home (MM2H) program: tiered (Silver/Gold/Platinum) with fixed deposit requirements $150k-$1M and monthly income proof. 5-20 year renewable. English widely spoken; strong expat infrastructure in Penang and KL.",
+      "confidence": "low",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (Kuala Lumpur vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Inland Revenue Board Malaysia (foreign-source income exemption)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Wikipedia: Malaysia My Second Home", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "Foreign-source income generally exempt from Malaysian tax for individuals; verify current rules with a cross-border specialist.",
+        "MM2H rules have been revised multiple times in recent years; always check current requirements.",
+        "Penang is a top-tier expat retirement destination with strong healthcare and English fluency."
+      ]
+    },
+    {
+      "id": "vn",
+      "name": "Vietnam",
+      "flag": "VN",
+      "region": "Southeast Asia",
+      "colMultiplier": 0.35,
+      "annualHealthcareUSD": 1500,
+      "withdrawalTaxRate": 0.05,
+      "swr": 0.04,
+      "safetyScore": 1.74,
+      "safetyRank": 41,
+      "residencyNote": "No dedicated retirement visa. Most expats use 1- or 5-year tourist/business visa cycles or marriage-based residency. Investor visas available with capital commitment.",
+      "confidence": "low",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (Hanoi vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "General Department of Taxation Vietnam (resident worldwide income)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Wikipedia: Visa policy of Vietnam", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "Visa pathway is the dominant constraint, not the math. Vietnam has no straightforward retirement visa.",
+        "Private healthcare in HCMC and Hanoi is improving but international hospital fees can be high.",
+        "Hanoi and HCMC are major cities; Da Nang and Hoi An popular with expats at lower cost."
       ]
     }
   ]
