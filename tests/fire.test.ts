@@ -1,6 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { computeCountryFire, computeAll, filterCountries, yearsToTarget } from '../src/domain/fire';
-import { ALL_REGIONS, type Country, type Region, type UserInputs } from '../src/domain/types';
+import {
+  coastFireYears,
+  computeAll,
+  computeCountryFire,
+  filterCountries,
+  yearsToTarget,
+} from '../src/domain/fire';
+import {
+  ALL_REGIONS,
+  type Country,
+  type FilterCriteria,
+  type Region,
+  type UserInputs,
+} from '../src/domain/types';
 import countriesData from '../src/data/countries.json';
 
 const usCountry: Country = {
@@ -17,13 +29,25 @@ const usCountry: Country = {
   dominantFaith: 'Christian (mixed)',
   visaDifficulty: 'easy',
   englishLevel: 'widespread',
+  yearsToCitizenship: 5,
+  dualCitizenshipAllowed: true,
+  foreignerPropertyOwnership: 'allowed',
   residencyNote: '',
   confidence: 'high',
   sources: [],
   caveats: [],
 };
 
-const defaultFilters = { regions: [] as Country['region'][], safety: 'any' as const, faiths: [], visa: 'any' as const, english: 'any' as const };
+const defaultFilters: FilterCriteria = {
+  regions: [],
+  safety: 'any',
+  faiths: [],
+  visa: 'any',
+  english: 'any',
+  citizenship: 'any',
+  property: 'any',
+  requireDualCitizenship: false,
+};
 
 describe('yearsToTarget', () => {
   it('returns 0 when current savings already exceed target', () => {
@@ -59,6 +83,43 @@ describe('yearsToTarget', () => {
 
   it('returns Infinity when contributions cannot overcome negative drift', () => {
     expect(yearsToTarget(100_000, 1_000, -0.05, 10_000_000)).toBe(Infinity);
+  });
+});
+
+describe('coastFireYears', () => {
+  it('returns 0 when already FIRE', () => {
+    expect(coastFireYears(2_000_000, 0, 0.05, 40, 65, 1_500_000)).toBe(0);
+  });
+
+  it('returns 0 when current portfolio compounds to FIRE by target age without contributions', () => {
+    // $500k at 5% real over 25 years = $1.69M, exceeds $1M target
+    expect(coastFireYears(500_000, 10_000, 0.05, 40, 65, 1_000_000)).toBe(0);
+  });
+
+  it('CoastFIRE earlier than standard FIRE for same target', () => {
+    // With 25-year coast window, CoastFIRE should be earlier than standard FIRE
+    const fire = yearsToTarget(100_000, 30_000, 0.05, 1_500_000);
+    const coast = coastFireYears(100_000, 30_000, 0.05, 40, 65, 1_500_000);
+    expect(coast).toBeLessThan(fire);
+  });
+
+  it('returns Infinity when even maxed-out saving cannot reach target by retirement age', () => {
+    // Save $10k/yr for 10 years at 5% to age 40 → can it grow to $10M by 65? No
+    expect(coastFireYears(50_000, 10_000, 0.05, 40, 65, 10_000_000)).toBe(Infinity);
+  });
+
+  it('degenerates to standard FIRE when target retirement age ≤ current age', () => {
+    const standardFire = yearsToTarget(100_000, 50_000, 0.05, 1_000_000);
+    const coastNoBufferAge = coastFireYears(100_000, 50_000, 0.05, 65, 65, 1_000_000);
+    const coastPastAge = coastFireYears(100_000, 50_000, 0.05, 70, 65, 1_000_000);
+    expect(coastNoBufferAge).toBeCloseTo(standardFire, 6);
+    expect(coastPastAge).toBeCloseTo(standardFire, 6);
+  });
+
+  it('degenerates to standard FIRE when realReturn ≤ 0 (no coast benefit)', () => {
+    const standardFire = yearsToTarget(100_000, 50_000, 0, 800_000);
+    const coast = coastFireYears(100_000, 50_000, 0, 40, 65, 800_000);
+    expect(coast).toBeCloseTo(standardFire, 6);
   });
 });
 
@@ -253,6 +314,44 @@ describe('filterCountries', () => {
       (c.englishLevel === 'urban' || c.englishLevel === 'widespread')
     )).toBe(true);
   });
+
+  it('citizenship=5 keeps only countries with naturalization in ≤5 years', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, citizenship: '5' });
+    expect(filtered.every((c) => c.yearsToCitizenship <= 5)).toBe(true);
+    expect(filtered.length).toBeGreaterThan(0);
+  });
+
+  it('citizenship=3 includes Argentina (2 yrs) and Ecuador / Canada (3 yrs)', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, citizenship: '3' });
+    expect(filtered.some((c) => c.id === 'ar')).toBe(true);
+    expect(filtered.some((c) => c.id === 'ca')).toBe(true);
+  });
+
+  it('property=allowed keeps only freehold-allowed countries', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, property: 'allowed' });
+    expect(filtered.every((c) => c.foreignerPropertyOwnership === 'allowed')).toBe(true);
+  });
+
+  it('property=allowed excludes Thailand (leasehold-only) and New Zealand (closed)', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, property: 'allowed' });
+    expect(filtered.some((c) => c.id === 'th')).toBe(false);
+    expect(filtered.some((c) => c.id === 'nz')).toBe(false);
+  });
+
+  it('property=not-closed includes restricted and leasehold but excludes New Zealand', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, property: 'not-closed' });
+    expect(filtered.some((c) => c.id === 'th')).toBe(true);
+    expect(filtered.some((c) => c.id === 'nz')).toBe(false);
+  });
+
+  it('requireDualCitizenship excludes countries that require US renunciation', () => {
+    const filtered = filterCountries(all, { ...defaultFilters, requireDualCitizenship: true });
+    expect(filtered.every((c) => c.dualCitizenshipAllowed)).toBe(true);
+    // Japan, Korea, Singapore should be excluded
+    expect(filtered.some((c) => c.id === 'jp')).toBe(false);
+    expect(filtered.some((c) => c.id === 'kr')).toBe(false);
+    expect(filtered.some((c) => c.id === 'sg')).toBe(false);
+  });
 });
 
 describe('countries.json integrity', () => {
@@ -278,6 +377,11 @@ describe('countries.json integrity', () => {
       expect(c.dominantFaith).toBeTruthy();
       expect(['easy', 'medium', 'hard', 'closed']).toContain(c.visaDifficulty);
       expect(['widespread', 'urban', 'limited']).toContain(c.englishLevel);
+      expect(typeof c.yearsToCitizenship).toBe('number');
+      expect(c.yearsToCitizenship).toBeGreaterThanOrEqual(0);
+      expect(c.yearsToCitizenship).toBeLessThanOrEqual(50);
+      expect(typeof c.dualCitizenshipAllowed).toBe('boolean');
+      expect(['allowed', 'restricted', 'leasehold-only', 'closed']).toContain(c.foreignerPropertyOwnership);
     }
   });
 

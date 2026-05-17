@@ -1,15 +1,19 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { computeAll, filterCountries } from '@/domain/fire';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { computeAll, DEFAULT_TARGET_RETIREMENT_AGE, filterCountries } from '@/domain/fire';
 import {
   ALL_FAITHS,
   ALL_REGIONS,
+  CITIZENSHIP_OPTIONS,
+  type CitizenshipThreshold,
   type Country,
   type DataSource,
   type EnglishLevel,
   type Faith,
   type FilterCriteria,
+  type Mode,
+  PROPERTY_OPTIONS,
   type Region,
   type SafetyThreshold,
   type UserInputs,
@@ -37,7 +41,12 @@ const defaultFilters: FilterCriteria = {
   faiths: [],
   visa: 'any',
   english: 'any',
+  citizenship: 'any',
+  property: 'any',
+  requireDualCitizenship: false,
 };
+
+const LUMPSLAM_BASE = 'https://www.pablooverton.com/lumpslam/profile/';
 
 const SAFETY_OPTIONS: Array<{ value: SafetyThreshold; label: string }> = [
   { value: 'any', label: 'Any' },
@@ -59,7 +68,88 @@ function countActiveAdvancedFilters(f: FilterCriteria): number {
   if (f.faiths.length > 0) n++;
   if (f.visa !== 'any') n++;
   if (f.english !== 'any') n++;
+  if (f.citizenship !== 'any') n++;
+  if (f.property !== 'any') n++;
+  if (f.requireDualCitizenship) n++;
   return n;
+}
+
+function buildLumpslamURL(inputs: UserInputs): string {
+  const p = new URLSearchParams({
+    source: 'firewhere',
+    currentAge: String(inputs.currentAge),
+    currentSavings: String(inputs.currentSavings),
+    annualSavings: String(inputs.annualSavings),
+    currentSpending: String(inputs.currentSpending),
+    realReturn: String(inputs.realReturn),
+  });
+  return `${LUMPSLAM_BASE}?${p.toString()}`;
+}
+
+function encodeStateToURL(
+  inputs: UserInputs,
+  filters: FilterCriteria,
+  mode: Mode,
+  targetAge: number
+): URLSearchParams {
+  const p = new URLSearchParams();
+  if (inputs.currentSavings !== defaultInputs.currentSavings) p.set('s', String(inputs.currentSavings));
+  if (inputs.annualSavings !== defaultInputs.annualSavings) p.set('as', String(inputs.annualSavings));
+  if (inputs.currentSpending !== defaultInputs.currentSpending) p.set('sp', String(inputs.currentSpending));
+  if (inputs.currentAge !== defaultInputs.currentAge) p.set('age', String(inputs.currentAge));
+  if (inputs.realReturn !== defaultInputs.realReturn) p.set('r', String(inputs.realReturn));
+  if (mode !== 'fire') p.set('mode', mode);
+  if (mode === 'coast' && targetAge !== DEFAULT_TARGET_RETIREMENT_AGE) p.set('target', String(targetAge));
+  if (filters.regions.length !== ALL_REGIONS.length) p.set('regions', filters.regions.join(','));
+  if (filters.safety !== 'any') p.set('safety', filters.safety);
+  if (filters.faiths.length > 0) p.set('faiths', filters.faiths.join(','));
+  if (filters.visa !== 'any') p.set('visa', filters.visa);
+  if (filters.english !== 'any') p.set('en', filters.english);
+  if (filters.citizenship !== 'any') p.set('cit', filters.citizenship);
+  if (filters.property !== 'any') p.set('prop', filters.property);
+  if (filters.requireDualCitizenship) p.set('dual', '1');
+  return p;
+}
+
+interface DecodedState {
+  inputs: UserInputs;
+  filters: FilterCriteria;
+  mode: Mode;
+  targetAge: number;
+}
+
+function decodeStateFromURL(): Partial<DecodedState> | null {
+  if (typeof window === 'undefined') return null;
+  const p = new URLSearchParams(window.location.search);
+  if (p.toString().length === 0) return null;
+  const num = (k: string, fallback: number): number => {
+    const v = Number(p.get(k));
+    return Number.isFinite(v) ? v : fallback;
+  };
+  const inputs: UserInputs = {
+    currentSavings: num('s', defaultInputs.currentSavings),
+    annualSavings: num('as', defaultInputs.annualSavings),
+    currentSpending: num('sp', defaultInputs.currentSpending),
+    currentAge: num('age', defaultInputs.currentAge),
+    realReturn: num('r', defaultInputs.realReturn),
+  };
+  const mode: Mode = p.get('mode') === 'coast' ? 'coast' : 'fire';
+  const targetAge = num('target', DEFAULT_TARGET_RETIREMENT_AGE);
+  const filters: FilterCriteria = {
+    regions: p.has('regions')
+      ? (p.get('regions') ?? '').split(',').filter((r): r is Region => ALL_REGIONS.includes(r as Region))
+      : [...ALL_REGIONS],
+    safety: (p.get('safety') as SafetyThreshold) ?? 'any',
+    faiths: p.has('faiths')
+      ? (p.get('faiths') ?? '').split(',').filter((f): f is Faith => ALL_FAITHS.includes(f as Faith))
+      : [],
+    visa: (p.get('visa') as VisaDifficulty | 'any') ?? 'any',
+    english: (p.get('en') as EnglishLevel | 'any') ?? 'any',
+    citizenship: (p.get('cit') as CitizenshipThreshold) ?? 'any',
+    property: (p.get('prop') as FilterCriteria['property']) ?? 'any',
+    requireDualCitizenship: p.get('dual') === '1',
+  };
+  return { inputs, filters, mode, targetAge };
 }
 
 type SortKey = 'country' | 'fireAge' | 'years' | 'spend' | 'fireNumber' | 'safety' | 'confidence';
@@ -117,12 +207,51 @@ export function Calculator({ countries, dataSources }: Props) {
   const [sortKey, setSortKey] = useState<SortKey>('fireAge');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [mode, setMode] = useState<Mode>('fire');
+  const [targetAge, setTargetAge] = useState<number>(DEFAULT_TARGET_RETIREMENT_AGE);
+  const [copied, setCopied] = useState(false);
+
+  // Load state from URL on mount (post-hydration). Static export means the initial render
+  // has no access to window.location, so we hydrate state from the URL once on the client.
+  /* eslint-disable react-hooks/set-state-in-effect */
+  const didLoadFromURL = useRef(false);
+  useEffect(() => {
+    if (didLoadFromURL.current) return;
+    didLoadFromURL.current = true;
+    const decoded = decodeStateFromURL();
+    if (!decoded) return;
+    if (decoded.inputs) setInputs(decoded.inputs);
+    if (decoded.filters) setFilters(decoded.filters);
+    if (decoded.mode) setMode(decoded.mode);
+    if (decoded.targetAge) setTargetAge(decoded.targetAge);
+    if (decoded.filters && countActiveAdvancedFilters(decoded.filters) > 0) {
+      setShowAdvanced(true);
+    }
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  // Persist state to URL (debounced).
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const t = window.setTimeout(() => {
+      const params = encodeStateToURL(inputs, filters, mode, targetAge);
+      const search = params.toString();
+      const url = search.length > 0
+        ? `${window.location.pathname}?${search}`
+        : window.location.pathname;
+      window.history.replaceState(null, '', url);
+    }, 300);
+    return () => window.clearTimeout(t);
+  }, [inputs, filters, mode, targetAge]);
 
   const visibleCountries = useMemo(
     () => filterCountries(countries, filters),
     [countries, filters]
   );
-  const results = useMemo(() => computeAll(inputs, visibleCountries), [inputs, visibleCountries]);
+  const results = useMemo(
+    () => computeAll(inputs, visibleCountries, { mode, targetRetirementAge: targetAge }),
+    [inputs, visibleCountries, mode, targetAge]
+  );
   const countryById = useMemo(
     () => Object.fromEntries(countries.map((c) => [c.id, c])),
     [countries]
@@ -189,10 +318,31 @@ export function Calculator({ countries, dataSources }: Props) {
       faiths: [],
       visa: 'any',
       english: 'any',
+      citizenship: 'any',
+      property: 'any',
+      requireDualCitizenship: false,
     }));
   };
 
   const advancedCount = countActiveAdvancedFilters(filters);
+
+  const copyLink = async () => {
+    if (typeof window === 'undefined') return;
+    const params = encodeStateToURL(inputs, filters, mode, targetAge);
+    const search = params.toString();
+    const url = search.length > 0
+      ? `${window.location.origin}${window.location.pathname}?${search}`
+      : `${window.location.origin}${window.location.pathname}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard API may fail (insecure context, permissions). Fall back to nothing.
+    }
+  };
+
+  const lumpslamURL = buildLumpslamURL(inputs);
 
   const onSort = (key: SortKey) => {
     if (key === sortKey) {
@@ -205,44 +355,119 @@ export function Calculator({ countries, dataSources }: Props) {
 
   return (
     <div className="space-y-10">
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 rounded-lg border border-gray-800 bg-gray-900/50">
-        <NumberField
-          label="Current savings (USD)"
-          value={inputs.currentSavings}
-          onChange={(v) => update('currentSavings', v)}
-          step={5000}
-          min={0}
-        />
-        <NumberField
-          label="Annual savings (USD/yr)"
-          value={inputs.annualSavings}
-          onChange={(v) => update('annualSavings', v)}
-          step={1000}
-          min={0}
-        />
-        <NumberField
-          label="Annual spending baseline (USD, US-equivalent)"
-          value={inputs.currentSpending}
-          onChange={(v) => update('currentSpending', v)}
-          step={1000}
-          min={0}
-        />
-        <NumberField
-          label="Current age"
-          value={inputs.currentAge}
-          onChange={(v) => update('currentAge', v)}
-          step={1}
-          min={0}
-          max={100}
-        />
-        <NumberField
-          label="Expected real return (%)"
-          value={Math.round(inputs.realReturn * 1000) / 10}
-          onChange={(v) => update('realReturn', v / 100)}
-          step={0.1}
-          min={-5}
-          max={20}
-        />
+      <section className="p-6 rounded-lg border border-gray-800 bg-gray-900/50 space-y-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-sm font-medium text-gray-400 flex items-center">
+            Mode
+            <InfoTooltip
+              position="bottom"
+              text="FIRE: years until you can stop working. CoastFIRE: years until you can stop saving and let the portfolio grow without contributions until your target retirement age."
+            />
+          </span>
+          <div className="inline-flex rounded-md border border-gray-700 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setMode('fire')}
+              className={`px-3 py-1.5 text-sm transition-colors ${
+                mode === 'fire' ? 'bg-blue-900/60 text-blue-100' : 'bg-gray-950 text-gray-400 hover:text-white'
+              }`}
+            >
+              FIRE
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('coast')}
+              className={`px-3 py-1.5 text-sm transition-colors border-l border-gray-700 ${
+                mode === 'coast' ? 'bg-blue-900/60 text-blue-100' : 'bg-gray-950 text-gray-400 hover:text-white'
+              }`}
+            >
+              CoastFIRE
+            </button>
+          </div>
+          {mode === 'coast' && (
+            <label className="flex items-center gap-2 text-sm text-gray-400">
+              Target retirement age
+              <input
+                type="number"
+                value={targetAge}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (Number.isFinite(v)) setTargetAge(v);
+                }}
+                step={1}
+                min={30}
+                max={100}
+                className="w-20 bg-gray-950 border border-gray-700 rounded px-2 py-1 text-white font-mono text-sm focus:outline-none focus:border-blue-500"
+              />
+            </label>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <NumberField
+            label="Current savings (USD)"
+            value={inputs.currentSavings}
+            onChange={(v) => update('currentSavings', v)}
+            step={5000}
+            min={0}
+          />
+          <NumberField
+            label="Annual savings (USD/yr)"
+            value={inputs.annualSavings}
+            onChange={(v) => update('annualSavings', v)}
+            step={1000}
+            min={0}
+          />
+          <NumberField
+            label="Annual spending baseline (USD, US-equivalent)"
+            value={inputs.currentSpending}
+            onChange={(v) => update('currentSpending', v)}
+            step={1000}
+            min={0}
+          />
+          <NumberField
+            label="Current age"
+            value={inputs.currentAge}
+            onChange={(v) => update('currentAge', v)}
+            step={1}
+            min={0}
+            max={100}
+          />
+          <NumberField
+            label="Expected real return (%)"
+            value={Math.round(inputs.realReturn * 1000) / 10}
+            onChange={(v) => update('realReturn', v / 100)}
+            step={0.1}
+            min={-5}
+            max={20}
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-gray-800">
+          <a
+            href={lumpslamURL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm bg-amber-900/40 text-amber-100 border border-amber-800 hover:bg-amber-900/60 transition-colors"
+            title="Pre-fill your current inputs in Lump Slam for full retirement modeling (Monte Carlo, Roth conversions, Social Security timing)."
+          >
+            <span>↗</span>
+            Open in Lump Slam
+          </a>
+          <button
+            type="button"
+            onClick={copyLink}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm bg-gray-800 text-gray-200 border border-gray-700 hover:bg-gray-700 transition-colors"
+            title="Copy a shareable link with your current inputs and filters."
+          >
+            <span>{copied ? '✓' : '⎘'}</span>
+            {copied ? 'Link copied' : 'Copy link'}
+          </button>
+          <InfoTooltip
+            position="bottom"
+            text="Open in Lump Slam pre-fills the deeper tool with your firewhere inputs to run Monte Carlo, Roth conversion timing, and Social Security strategy. Copy link saves your current inputs + filters in a shareable URL."
+          />
+        </div>
       </section>
 
       <section className="p-4 rounded-lg border border-gray-800 bg-gray-900/30 space-y-4">
@@ -350,6 +575,63 @@ export function Calculator({ countries, dataSources }: Props) {
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-400 mb-2 flex items-center">
+                    Citizenship pathway
+                    <InfoTooltip
+                      position="bottom"
+                      text="Standard residency-based naturalization for a US citizen with no heritage / fast-track. Argentina (2 yrs), Ecuador / Canada (3 yrs), Australia (4 yrs) are at the fast end. Switzerland, Austria, Italy, Spain are 10+ yrs."
+                    />
+                  </label>
+                  <select
+                    value={filters.citizenship}
+                    onChange={(e) => setFilters((p) => ({ ...p, citizenship: e.target.value as CitizenshipThreshold }))}
+                    className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+                  >
+                    {CITIZENSHIP_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-400 mb-2 flex items-center">
+                    Property ownership
+                    <InfoTooltip
+                      position="bottom"
+                      text="How foreign residential property purchase works. Freehold = full ownership (most of EU + Americas + Korea/Japan/Taiwan). Foreigners can buy = includes restricted zones (Mexico Restricted Zone, UAE freehold zones, Singapore private only) and leasehold-only (Thailand 30-yr renewable, Vietnam 50-yr). New Zealand is closed to foreigners since 2018."
+                    />
+                  </label>
+                  <select
+                    value={filters.property}
+                    onChange={(e) => setFilters((p) => ({ ...p, property: e.target.value as FilterCriteria['property'] }))}
+                    className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+                  >
+                    {PROPERTY_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-400 mb-2 flex items-center">
+                    Dual citizenship with US
+                    <InfoTooltip
+                      position="bottom"
+                      text="Some countries require renouncing US citizenship to naturalize: Japan, South Korea, Singapore, Netherlands (with exceptions), Austria (with exceptions), Spain (for non-Iberian), UAE. Check this box to exclude them."
+                    />
+                  </label>
+                  <label className="flex items-center gap-2 py-1.5">
+                    <input
+                      type="checkbox"
+                      checked={filters.requireDualCitizenship}
+                      onChange={(e) => setFilters((p) => ({ ...p, requireDualCitizenship: e.target.checked }))}
+                      className="w-4 h-4 rounded border-gray-700 bg-gray-950 accent-blue-600"
+                    />
+                    <span className="text-sm text-gray-300">Must allow dual citizenship</span>
+                  </label>
+                </div>
+              </div>
+
               <div>
                 <label className="text-sm font-medium text-gray-400 mb-2 flex items-center">
                   Dominant faith
@@ -420,13 +702,33 @@ export function Calculator({ countries, dataSources }: Props) {
                     tooltip="Country name, 2-letter code, and region. Click to sort alphabetically.">
                     Country
                   </SortableTh>
-                  <SortableTh sortKey="fireAge" activeKey={sortKey} dir={sortDir} onClick={onSort} align="right"
-                    tooltip="The age at which you can stop working, assuming you relocate here. Equals current age + years to FIRE.">
-                    FIRE age
+                  <SortableTh
+                    sortKey="fireAge"
+                    activeKey={sortKey}
+                    dir={sortDir}
+                    onClick={onSort}
+                    align="right"
+                    tooltip={
+                      mode === 'coast'
+                        ? `CoastFIRE age — the age at which you can stop saving and let the portfolio grow without contributions to reach the FIRE number by your target retirement age (${targetAge}). Equals current age + years to coast.`
+                        : 'The age at which you can stop working, assuming you relocate here. Equals current age + years to FIRE.'
+                    }
+                  >
+                    {mode === 'coast' ? 'Coast age' : 'FIRE age'}
                   </SortableTh>
-                  <SortableTh sortKey="years" activeKey={sortKey} dir={sortDir} onClick={onSort} align="right"
-                    tooltip="Years from today until your portfolio reaches the FIRE number, solved from compound growth: P(t) = currentSavings × (1+r)^t + annualSavings × ((1+r)^t − 1) / r.">
-                    Years
+                  <SortableTh
+                    sortKey="years"
+                    activeKey={sortKey}
+                    dir={sortDir}
+                    onClick={onSort}
+                    align="right"
+                    tooltip={
+                      mode === 'coast'
+                        ? `Years from today until you can stop saving. After this point, contributions can stop and the portfolio compounds at the expected real return until the target retirement age (${targetAge}).`
+                        : 'Years from today until your portfolio reaches the FIRE number, solved from compound growth: P(t) = currentSavings × (1+r)^t + annualSavings × ((1+r)^t − 1) / r.'
+                    }
+                  >
+                    {mode === 'coast' ? 'Years to coast' : 'Years'}
                   </SortableTh>
                   <SortableTh sortKey="spend" activeKey={sortKey} dir={sortDir} onClick={onSort} align="right"
                     tooltip="Annual spending in USD localized to this country. Formula: (your US baseline spending × cost-of-living multiplier) + annual healthcare cost.">

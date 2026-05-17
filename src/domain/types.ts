@@ -21,6 +21,18 @@ export type VisaDifficulty = 'easy' | 'medium' | 'hard' | 'closed';
 
 export type EnglishLevel = 'widespread' | 'urban' | 'limited';
 
+export type PropertyOwnership = 'allowed' | 'restricted' | 'leasehold-only' | 'closed';
+
+export type Mode = 'fire' | 'coast';
+
+export interface ComputeOptions {
+  mode: Mode;
+  /** Target retirement age used in CoastFIRE mode. */
+  targetRetirementAge: number;
+}
+
+export type CitizenshipThreshold = 'any' | '10' | '5' | '3';
+
 export const ALL_FAITHS: Faith[] = [
   'Catholic',
   'Protestant',
@@ -76,6 +88,12 @@ export interface Country {
   visaDifficulty: VisaDifficulty;
   /** How widely English is spoken locally. */
   englishLevel: EnglishLevel;
+  /** Standard residency-based naturalization years for a US citizen with no heritage / fast-track path. */
+  yearsToCitizenship: number;
+  /** Whether the country permits dual citizenship with the US (false = must renounce US). */
+  dualCitizenshipAllowed: boolean;
+  /** Foreign residential property ownership classification. */
+  foreignerPropertyOwnership: PropertyOwnership;
   residencyNote: string;
   confidence: 'high' | 'medium' | 'low';
   sources: Array<{ name: string; url: string | null; lastVerified: string }>;
@@ -131,7 +149,26 @@ export interface FilterCriteria {
   visa: VisaDifficulty | 'any';
   /** "any" = no language filter. Otherwise: include countries at this English level or better (widespread > urban > limited). */
   english: EnglishLevel | 'any';
+  /** Citizenship pathway threshold: "any" = no filter; otherwise yearsToCitizenship must be ≤ the chosen value. */
+  citizenship: CitizenshipThreshold;
+  /** Property ownership filter: "any" = no filter; "allowed" = freehold only; "not-closed" = include allowed/restricted/leasehold but exclude closed. */
+  property: 'any' | 'allowed' | 'not-closed';
+  /** Dual-citizenship-with-US must be permitted. */
+  requireDualCitizenship: boolean;
 }
+
+export const CITIZENSHIP_OPTIONS: Array<{ value: CitizenshipThreshold; label: string }> = [
+  { value: 'any', label: 'Any' },
+  { value: '10', label: 'Within 10 yrs' },
+  { value: '5', label: 'Within 5 yrs' },
+  { value: '3', label: 'Within 3 yrs (fast track)' },
+];
+
+export const PROPERTY_OPTIONS: Array<{ value: FilterCriteria['property']; label: string }> = [
+  { value: 'any', label: 'Any' },
+  { value: 'not-closed', label: 'Foreigners can buy (any form)' },
+  { value: 'allowed', label: 'Freehold ownership only' },
+];
 
 /** Numeric ordering for visa difficulty so "include up to X" filter works. */
 export const VISA_LEVEL: Record<VisaDifficulty, number> = {

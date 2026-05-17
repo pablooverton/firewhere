@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.5.0",
   "lastUpdated": "2026-05-17",
   "lastReviewed": "2026-05-17",
   "schema": {
@@ -13,7 +13,10 @@
     "confidence": "high | medium | low — reflects how well-supported the parameter set is by public data.",
     "dominantFaith": "Dominant religious tradition (cultural majority, not necessarily practicing).",
     "visaDifficulty": "Retirement / long-term residency visa difficulty for US citizens: easy | medium | hard | closed.",
-    "englishLevel": "How widely English is spoken: widespread | urban (cities/tourist areas) | limited (need to learn the local language)."
+    "englishLevel": "How widely English is spoken: widespread | urban (cities/tourist areas) | limited (need to learn the local language).",
+    "yearsToCitizenship": "Standard residency-based naturalization years for a US citizen with no heritage / fast-track path. Lower is faster.",
+    "dualCitizenshipAllowed": "Whether the country permits dual citizenship with the US (false = must renounce US, e.g. Japan, Korea, Singapore).",
+    "foreignerPropertyOwnership": "Foreign residential property ownership: allowed (freehold) | restricted (zones/condos only) | leasehold-only | closed."
   },
   "dataSources": {
     "safety": {
@@ -48,6 +51,9 @@
       "dominantFaith": "Christian (mixed)",
       "visaDifficulty": "easy",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Default base case. Healthcare estimate assumes pre-Medicare ACA marketplace coverage for a retired couple.",
       "confidence": "high",
       "sources": [
@@ -87,6 +93,9 @@
       "dominantFaith": "Christian (mixed)",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 3,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "No dedicated retirement visa for non-residents. Family-sponsored or skilled-worker pathways. Permanent residency required for provincial healthcare access.",
       "confidence": "medium",
       "sources": [
@@ -120,6 +129,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "easy",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Temporary Resident visa (4 years renewable) at ~$4,300/mo income or ~$72k savings. Permanent Resident after 4 years or with higher thresholds.",
       "confidence": "medium",
       "sources": [
@@ -153,6 +165,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "easy",
       "englishLevel": "urban",
+      "yearsToCitizenship": 7,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Pensionado: $1,000/mo lifetime pension. Rentista: $2,500/mo for 2 yrs or $60k deposit. Inversionista: $150k investment. No standing army.",
       "confidence": "medium",
       "sources": [
@@ -181,6 +196,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "easy",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Pensionado visa: $1,000/mo lifetime pension ($750 if buying $100k+ property). Very generous discounts for pensionado holders.",
       "confidence": "medium",
       "sources": [
@@ -209,6 +227,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Retirement (M-Pensionado) visa: ~$1,000/mo pension. Medellín and Bogotá popular with expats.",
       "confidence": "medium",
       "sources": [
@@ -237,6 +258,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "easy",
       "englishLevel": "limited",
+      "yearsToCitizenship": 3,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Retirement visa: ~$1,400/mo passive income. Uses US dollar (dollarized economy). Cuenca and Vilcabamba popular expat destinations.",
       "confidence": "low",
       "sources": [
@@ -265,6 +289,9 @@
       "dominantFaith": "Secular",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Permanent residency requires demonstrating sufficient income. 11-year tax holiday on foreign-source income for new residents (extended in 2020).",
       "confidence": "medium",
       "sources": [
@@ -293,6 +320,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Temporary residency for retirees with sufficient passive income. Path to permanent residency after 1 year of temporary status.",
       "confidence": "medium",
       "sources": [
@@ -321,6 +351,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 2,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Rentista visa available with proof of sufficient passive income. Citizenship after 2 years of residency.",
       "confidence": "low",
       "sources": [
@@ -349,6 +382,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "easy",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "D7 passive-income visa: ~$870/mo for primary applicant. NHR program revised in 2024; replacement IFICI regime applies to qualifying high-skilled workers but not general retirees. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -377,6 +413,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Non-Lucrative Visa: ~$2,800/mo passive income. Citizenship after 10 years (2 for Sephardic Jews / Ibero-Americans). EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -405,6 +444,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "easy",
       "englishLevel": "urban",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Elective Residence Visa: ~$3,000/mo passive income, no work. 7% flat tax on all foreign income for retirees relocating to qualifying towns (under 20k pop) in Southern Italy, for up to 9 years.",
       "confidence": "medium",
       "sources": [
@@ -433,6 +475,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Visiteur (long-stay visitor) visa for retirees with sufficient income (~$1,500/mo) and private health insurance. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -461,6 +506,9 @@
       "dominantFaith": "Christian (mixed)",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "No dedicated retirement visa. Family-based, freelancer (Freiberufler), or self-employed visa pathways. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -489,6 +537,9 @@
       "dominantFaith": "Secular",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "No dedicated retirement visa. DAFT (Dutch-American Friendship Treaty) provides entrepreneur pathway. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -517,6 +568,9 @@
       "dominantFaith": "Christian (mixed)",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "restricted",
       "residencyNote": "Forfait fiscal (lump-sum taxation) available to non-Swiss retirees in many cantons — tax based on lifestyle expenses rather than income.",
       "confidence": "medium",
       "sources": [
@@ -545,6 +599,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "hard",
       "englishLevel": "urban",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Settlement Permit for financially independent persons (Niederlassungsbewilligung) requires demonstrating sufficient passive income.",
       "confidence": "medium",
       "sources": [
@@ -573,6 +630,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "No dedicated retirement visa; income-based residency pathways exist. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -601,6 +661,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "medium",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Stamp 0 long-term residency for retirees of independent means: ~$56k/yr individual or $100k/yr couple. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -629,6 +692,9 @@
       "dominantFaith": "Christian (mixed)",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 6,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "No retirement visa post-Brexit. Ancestry visa, family visa, or skilled worker route. ILR (settlement) after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -657,6 +723,9 @@
       "dominantFaith": "Secular",
       "visaDifficulty": "hard",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Long-term residence for purpose of family reunification, business, or study. No dedicated retirement visa.",
       "confidence": "medium",
       "sources": [
@@ -685,6 +754,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Temporary residence for financially independent persons. Permanent residence after 5 years. EU citizenship pathway after 8-10 years.",
       "confidence": "medium",
       "sources": [
@@ -713,6 +785,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "hard",
       "englishLevel": "urban",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Temporary residence for sufficient means. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -741,6 +816,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 8,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Temporary residence for retirees with sufficient passive income. Digital nomad visa also available. EU member since 2013; Schengen since 2023.",
       "confidence": "medium",
       "sources": [
@@ -769,6 +847,9 @@
       "dominantFaith": "Orthodox",
       "visaDifficulty": "easy",
       "englishLevel": "urban",
+      "yearsToCitizenship": 7,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Foreign pensioner program: 7% flat tax on all foreign-source income for 15 years for new tax residents who relocate from abroad. Golden Visa also available for property investment.",
       "confidence": "medium",
       "sources": [
@@ -797,6 +878,9 @@
       "dominantFaith": "Secular",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "No retirement visa. Family or work-based pathways. Permanent residency after 5 years; citizenship after 8.",
       "confidence": "medium",
       "sources": [
@@ -825,6 +909,9 @@
       "dominantFaith": "Secular",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 7,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Not in EU — Norway is EEA. Retirement requires demonstrating sufficient means; no specific retirement visa.",
       "confidence": "medium",
       "sources": [
@@ -853,6 +940,9 @@
       "dominantFaith": "Secular",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 9,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "No retirement visa. Family reunification or work-based pathways. EU permanent residency after 5 years.",
       "confidence": "medium",
       "sources": [
@@ -881,6 +971,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 8,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Investor (Golden Visa) program relaunched in 2024 with $260k+ real-estate fund or $1.05M property investment. White card for digital nomads.",
       "confidence": "medium",
       "sources": [
@@ -909,6 +1002,9 @@
       "dominantFaith": "Protestant",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 7,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Outside EU but in EEA. Long-term residence for sufficient means; no specific retirement visa.",
       "confidence": "medium",
       "sources": [
@@ -937,6 +1033,9 @@
       "dominantFaith": "Secular",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 8,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Digital Nomad Visa for remote workers. No dedicated retirement visa; family or income-based pathways. EU residency after 5 years. E-Residency provides administrative access but not physical residency.",
       "confidence": "medium",
       "sources": [
@@ -965,6 +1064,9 @@
       "dominantFaith": "Christian (mixed)",
       "visaDifficulty": "hard",
       "englishLevel": "limited",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "F-2 long-term residency or F-5 permanent residency. No dedicated retirement visa; pathway requires prior residency, family ties, or qualifying income.",
       "confidence": "medium",
       "sources": [
@@ -998,6 +1100,9 @@
       "dominantFaith": "Secular",
       "visaDifficulty": "hard",
       "englishLevel": "limited",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "No dedicated retirement visa. Long-term resident or spouse-of-Japanese visa are common pathways. Highly Skilled Professional visa accelerates PR for qualifying workers.",
       "confidence": "medium",
       "sources": [
@@ -1031,6 +1136,9 @@
       "dominantFaith": "Buddhist",
       "visaDifficulty": "hard",
       "englishLevel": "limited",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Taiwan Gold Card available for qualifying professionals; APRC (permanent residency) achievable after sustained residency. Foreign-source income receives favorable treatment.",
       "confidence": "medium",
       "sources": [
@@ -1059,6 +1167,9 @@
       "dominantFaith": "Buddhist",
       "visaDifficulty": "easy",
       "englishLevel": "urban",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "leasehold-only",
       "residencyNote": "LTR visa: $80k+ passive income or $1M assets, 10-year stay. Retirement (O-A/O-X) visa: 50+, savings + monthly income proof. Thailand Privilege (Elite) visa: $14k-$70k+ membership.",
       "confidence": "medium",
       "sources": [
@@ -1087,6 +1198,9 @@
       "dominantFaith": "Muslim",
       "visaDifficulty": "easy",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Malaysia My Second Home (MM2H): tiered Silver/Gold/Platinum with fixed deposit $150k-$1M and monthly income proof. 5-20 year renewable. English widely spoken.",
       "confidence": "medium",
       "sources": [
@@ -1115,6 +1229,9 @@
       "dominantFaith": "Secular",
       "visaDifficulty": "closed",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "leasehold-only",
       "residencyNote": "No dedicated retirement visa. Most expats use 1- or 5-year tourist/business visa cycles or marriage-based residency. Investor visas with capital commitment.",
       "confidence": "low",
       "sources": [
@@ -1143,6 +1260,9 @@
       "dominantFaith": "Buddhist",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "restricted",
       "residencyNote": "Global Investor Programme requires $7.5M+ commitment. Long Term Visit Pass (LTVP) for parents of Singapore residents. No general retirement visa.",
       "confidence": "medium",
       "sources": [
@@ -1171,6 +1291,9 @@
       "dominantFaith": "Catholic",
       "visaDifficulty": "easy",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "restricted",
       "residencyNote": "SRRV (Special Resident Retiree's Visa) at $10k-$50k deposit depending on age. Indefinite stay; multiple entries.",
       "confidence": "low",
       "sources": [
@@ -1199,6 +1322,9 @@
       "dominantFaith": "Muslim",
       "visaDifficulty": "medium",
       "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "restricted",
       "residencyNote": "Second Home Visa (B211B / KITAS) requires $130k+ deposit in Indonesian bank or property. Bali in particular has strong expat infrastructure.",
       "confidence": "low",
       "sources": [
@@ -1227,6 +1353,9 @@
       "dominantFaith": "Buddhist",
       "visaDifficulty": "easy",
       "englishLevel": "urban",
+      "yearsToCitizenship": 7,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "leasehold-only",
       "residencyNote": "ER (Retirement) visa renewable annually with minimal documentation; one of the easier visas in the region.",
       "confidence": "low",
       "sources": [
@@ -1255,6 +1384,9 @@
       "dominantFaith": "Buddhist",
       "visaDifficulty": "medium",
       "englishLevel": "limited",
+      "yearsToCitizenship": 10,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "leasehold-only",
       "residencyNote": "Long-term visa via business setup or property investment. Less developed expat infrastructure than neighbors.",
       "confidence": "low",
       "sources": [
@@ -1283,6 +1415,9 @@
       "dominantFaith": "Muslim",
       "visaDifficulty": "easy",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 30,
+      "dualCitizenshipAllowed": false,
+      "foreignerPropertyOwnership": "restricted",
       "residencyNote": "Retirement visa available to applicants 55+ with $545k property, $272k savings, or $54k/yr income. Renewable every 5 years.",
       "confidence": "medium",
       "sources": [
@@ -1311,6 +1446,9 @@
       "dominantFaith": "Jewish",
       "visaDifficulty": "medium",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Aliyah (Law of Return) for Jewish individuals provides immediate citizenship and 10-year exemption on foreign income/capital gains.",
       "confidence": "medium",
       "sources": [
@@ -1339,6 +1477,9 @@
       "dominantFaith": "Muslim",
       "visaDifficulty": "medium",
       "englishLevel": "limited",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Citizenship by investment available with $400k+ property purchase (since 2022). Residence permit pathways for retirees.",
       "confidence": "low",
       "sources": [
@@ -1367,6 +1508,9 @@
       "dominantFaith": "Muslim",
       "visaDifficulty": "medium",
       "englishLevel": "limited",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Long-term residence card available after legal stay. No specific retirement visa but income-based pathways accessible.",
       "confidence": "low",
       "sources": [
@@ -1395,6 +1539,9 @@
       "dominantFaith": "Christian (mixed)",
       "visaDifficulty": "medium",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Retired Person's Permit: ~$2,000/mo passive income or $260k+ in income-generating assets.",
       "confidence": "low",
       "sources": [
@@ -1423,6 +1570,9 @@
       "dominantFaith": "Hindu",
       "visaDifficulty": "easy",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
       "residencyNote": "Retired Non-Citizen Permit: $1,500/mo income or $18k+ initial deposit, then $1,500/mo. 10-year renewable. Multilingual (English/French/Creole).",
       "confidence": "medium",
       "sources": [
@@ -1451,6 +1601,9 @@
       "dominantFaith": "Christian (mixed)",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 4,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "restricted",
       "residencyNote": "Investor Retirement Visa (subclass 405) was closed in 2018. Current options: family-sponsored or skilled migration. Permanent residency via state nomination or family.",
       "confidence": "medium",
       "sources": [
@@ -1479,6 +1632,9 @@
       "dominantFaith": "Christian (mixed)",
       "visaDifficulty": "hard",
       "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "closed",
       "residencyNote": "Parent Retirement Resident Visa: $740k investment + sufficient income. Active Investor Plus visa for high-net-worth applicants.",
       "confidence": "medium",
       "sources": [
