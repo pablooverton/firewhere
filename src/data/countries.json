@@ -1,0 +1,96 @@
+{
+  "version": "0.1.0",
+  "lastUpdated": "2026-05-17",
+  "schema": {
+    "colMultiplier": "Multiplier applied to user's USD baseline spending. 1.00 = US baseline.",
+    "annualHealthcareUSD": "Additive baseline annual healthcare cost in USD for a retired adult / small family. Conservative midpoint.",
+    "withdrawalTaxRate": "Approximate effective tax rate on retirement withdrawals for a moderate-income retiree. Heuristic — not a substitute for individualized tax modeling.",
+    "swr": "Suggested safe withdrawal rate baseline for this country.",
+    "confidence": "high | medium | low — reflects how well-supported the parameter set is by public data."
+  },
+  "countries": [
+    {
+      "id": "us",
+      "name": "United States",
+      "flag": "US",
+      "colMultiplier": 1.00,
+      "annualHealthcareUSD": 12000,
+      "withdrawalTaxRate": 0.12,
+      "swr": 0.040,
+      "residencyNote": "Default base case. Healthcare estimate assumes pre-Medicare ACA marketplace coverage for a retired couple.",
+      "confidence": "high",
+      "sources": [
+        { "name": "Trinity Study / Bengen 4% rule", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "IRS federal income tax brackets 2025", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "KFF ACA marketplace premium data", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "Withdrawal tax rate assumes mixed taxable/IRA/Roth portfolio at a moderate income level. Heavy pre-tax skews higher; heavy Roth skews lower.",
+        "Healthcare baseline excludes long-term care."
+      ]
+    },
+    {
+      "id": "kr",
+      "name": "South Korea",
+      "flag": "KR",
+      "colMultiplier": 0.62,
+      "annualHealthcareUSD": 3500,
+      "withdrawalTaxRate": 0.08,
+      "swr": 0.040,
+      "residencyNote": "F-2 long-term residency or F-5 permanent residency pathways exist. No dedicated retirement visa; pathway typically requires prior residency, marriage, or qualifying income.",
+      "confidence": "medium",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (Seoul vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Korea National Health Insurance Service rate schedule", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "OECD Korea tax profile", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "COL varies substantially Seoul vs regional cities (±25%).",
+        "Tax treatment of foreign retirement accounts and Roth distributions is jurisdiction-specific; consult a cross-border tax specialist.",
+        "Visa path is the practical constraint for most US citizens, not the math."
+      ]
+    },
+    {
+      "id": "jp",
+      "name": "Japan",
+      "flag": "JP",
+      "colMultiplier": 0.68,
+      "annualHealthcareUSD": 3000,
+      "withdrawalTaxRate": 0.10,
+      "swr": 0.040,
+      "residencyNote": "No dedicated retirement visa. Long-term resident or spouse-of-Japanese visa are common pathways. Japan Highly Skilled Professional visa accelerates permanent residency for qualifying workers.",
+      "confidence": "medium",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (Tokyo vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Japan National Health Insurance premium schedule", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "OECD Japan tax profile", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "Japan taxes worldwide income for residents after 5 of last 10 years in country. Pre-residency window has lighter treatment.",
+        "Tokyo COL is meaningfully higher than regional Japan.",
+        "Inheritance tax exposure for long-term residents is significant — not modeled here."
+      ]
+    },
+    {
+      "id": "tw",
+      "name": "Taiwan",
+      "flag": "TW",
+      "colMultiplier": 0.55,
+      "annualHealthcareUSD": 1500,
+      "withdrawalTaxRate": 0.05,
+      "swr": 0.040,
+      "residencyNote": "Taiwan Gold Card available for qualifying professionals; APRC (permanent residency) achievable after sustained residency. Foreign-sourced income receives favorable treatment for new residents.",
+      "confidence": "medium",
+      "sources": [
+        { "name": "Numbeo cost-of-living index (Taipei vs US average)", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Taiwan National Health Insurance premium schedule", "url": null, "lastVerified": "2026-05-17" },
+        { "name": "Taiwan Ministry of Finance tax guidance for foreign residents", "url": null, "lastVerified": "2026-05-17" }
+      ],
+      "caveats": [
+        "Foreign-source income (including US retirement accounts) generally enjoys favorable treatment — modeled here as low effective rate, but jurisdiction-specific.",
+        "NHI is one of the cheapest comprehensive systems in the developed world.",
+        "Cross-strait political risk is not modeled — outside the scope of a FIRE calculator."
+      ]
+    }
+  ]
+}
