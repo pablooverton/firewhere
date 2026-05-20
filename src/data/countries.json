@@ -1,5 +1,5 @@
 {
-  "version": "0.5.4",
+  "version": "0.6.0",
   "lastUpdated": "2026-05-20",
   "lastReviewed": "2026-05-20",
   "schema": {
@@ -1422,9 +1422,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "UAE Federal Tax Authority (no personal income tax)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "UAE Federal Tax Authority — English",
+          "url": "https://www.tax.gov.ae/en/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1453,9 +1453,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Israel Tax Authority (Aliyah 10-year exemption)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Wikipedia: Israel Tax Authority",
+          "url": "https://en.wikipedia.org/wiki/Israel_Tax_Authority",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1484,9 +1484,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "Turkey Revenue Administration",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Turkish Revenue Administration (GİB) — English",
+          "url": "https://www.gib.gov.tr/en",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1515,9 +1515,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "Morocco Direction Générale des Impôts",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Wikipedia: Taxation in Morocco",
+          "url": "https://en.wikipedia.org/wiki/Taxation_in_Morocco",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1546,9 +1546,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "SARS South Africa (worldwide taxation)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "SARS — South African Revenue Service",
+          "url": "https://www.sars.gov.za/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1577,9 +1577,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Mauritius Revenue Authority",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Mauritius Revenue Authority (MRA)",
+          "url": "https://www.mra.mu/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1608,9 +1608,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Australian Tax Office (worldwide taxation)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Australian Taxation Office (ATO)",
+          "url": "https://www.ato.gov.au/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1639,9 +1639,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Inland Revenue New Zealand",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Inland Revenue New Zealand (IRD)",
+          "url": "https://www.ird.govt.nz/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
