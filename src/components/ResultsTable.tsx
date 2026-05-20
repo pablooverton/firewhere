@@ -1,5 +1,6 @@
 'use client';
 
+import { bridgeYears, hasLongBridge, SOCIAL_SECURITY_EARLIEST_AGE } from '@/domain/fire';
 import type { Country, FireResult, Mode } from '@/domain/types';
 import { confidenceColor, formatAge, formatUSD, formatYears, safetyColor } from '@/lib/format';
 import { SortableTh, type SortDir } from './SortableTh';
@@ -96,6 +97,7 @@ export function ResultsTable({
             <tbody>
               {sortedResults.map((r) => {
                 const c = countryById[r.countryId];
+                const showBridge = mode === 'fire' && hasLongBridge(r.fireAge);
                 return (
                   <tr key={r.countryId} className="border-t border-gray-800 hover:bg-gray-900/40">
                     <td className="px-4 py-3 text-white">
@@ -104,6 +106,15 @@ export function ResultsTable({
                       <div className="text-xs text-gray-600">{c?.region}</div>
                     </td>
                     <td className="px-4 py-3 text-right text-white font-mono whitespace-nowrap">
+                      {showBridge && (
+                        <span
+                          className="mr-1 text-amber-400"
+                          title={`Long pre-SS bridge: ${bridgeYears(r.fireAge).toFixed(0)} yrs to Social Security at ${SOCIAL_SECURITY_EARLIEST_AGE}. See country notes below.`}
+                          aria-label="Long pre-Social Security bridge warning"
+                        >
+                          ⚠
+                        </span>
+                      )}
                       {formatAge(r.fireAge)}
                     </td>
                     <td className="px-4 py-3 text-right text-gray-400 font-mono">

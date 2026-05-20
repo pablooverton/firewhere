@@ -1,9 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import {
+  bridgeYears,
+  BRIDGE_THRESHOLD_YEARS,
   coastFireYears,
   computeAll,
   computeCountryFire,
   filterCountries,
+  hasLongBridge,
+  SOCIAL_SECURITY_EARLIEST_AGE,
   yearsToTarget,
 } from '../src/domain/fire';
 import {
@@ -410,5 +414,43 @@ describe('countries.json integrity', () => {
     // GPI score and rank should correlate strongly. Sample a few high/low pairs.
     const byRank = [...countriesData.countries].sort((a, b) => a.safetyRank - b.safetyRank);
     expect(byRank[0].safetyScore).toBeLessThan(byRank[byRank.length - 1].safetyScore);
+  });
+});
+
+describe('bridgeYears', () => {
+  it('returns 0 when fireAge is past Social Security earliest age', () => {
+    expect(bridgeYears(SOCIAL_SECURITY_EARLIEST_AGE)).toBe(0);
+    expect(bridgeYears(SOCIAL_SECURITY_EARLIEST_AGE + 5)).toBe(0);
+    expect(bridgeYears(70)).toBe(0);
+  });
+
+  it('returns the gap when fireAge is below SS earliest', () => {
+    expect(bridgeYears(50)).toBe(SOCIAL_SECURITY_EARLIEST_AGE - 50);
+    expect(bridgeYears(40)).toBe(SOCIAL_SECURITY_EARLIEST_AGE - 40);
+    expect(bridgeYears(35)).toBe(SOCIAL_SECURITY_EARLIEST_AGE - 35);
+  });
+
+  it('returns 0 for unreachable FIRE (Infinity)', () => {
+    expect(bridgeYears(Infinity)).toBe(0);
+  });
+});
+
+describe('hasLongBridge', () => {
+  it('is true when bridge meets or exceeds the threshold', () => {
+    const triggerAge = SOCIAL_SECURITY_EARLIEST_AGE - BRIDGE_THRESHOLD_YEARS;
+    expect(hasLongBridge(triggerAge)).toBe(true);
+    expect(hasLongBridge(triggerAge - 5)).toBe(true);
+    expect(hasLongBridge(30)).toBe(true);
+  });
+
+  it('is false when bridge is below the threshold', () => {
+    const justUnderTriggerAge = SOCIAL_SECURITY_EARLIEST_AGE - BRIDGE_THRESHOLD_YEARS + 1;
+    expect(hasLongBridge(justUnderTriggerAge)).toBe(false);
+    expect(hasLongBridge(SOCIAL_SECURITY_EARLIEST_AGE)).toBe(false);
+    expect(hasLongBridge(70)).toBe(false);
+  });
+
+  it('is false for unreachable FIRE', () => {
+    expect(hasLongBridge(Infinity)).toBe(false);
   });
 });

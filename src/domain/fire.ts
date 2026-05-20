@@ -3,6 +3,28 @@ import { ENGLISH_LEVEL, SAFETY_THRESHOLD_SCORE, VISA_LEVEL } from './types';
 
 export const DEFAULT_TARGET_RETIREMENT_AGE = 65;
 
+/** Earliest age a US worker can claim reduced Social Security benefits. */
+export const SOCIAL_SECURITY_EARLIEST_AGE = 62;
+
+/**
+ * Threshold for surfacing a bridge-years warning. A FIRE age this far below
+ * SS-earliest concentrates the sequence-of-returns risk window into a long
+ * unbridged period, where a bad early-retirement market can permanently
+ * impair the portfolio.
+ */
+export const BRIDGE_THRESHOLD_YEARS = 12;
+
+/** Years between FIRE age and earliest Social Security claim. Zero if already past SS age or unreachable. */
+export function bridgeYears(fireAge: number): number {
+  if (!Number.isFinite(fireAge)) return 0;
+  return Math.max(0, SOCIAL_SECURITY_EARLIEST_AGE - fireAge);
+}
+
+/** True when the bridge from FIRE age to SS-earliest is long enough to warrant a sequence-risk warning. */
+export function hasLongBridge(fireAge: number): boolean {
+  return bridgeYears(fireAge) >= BRIDGE_THRESHOLD_YEARS;
+}
+
 /**
  * Closed-form solve for the number of years until a portfolio with periodic
  * contributions reaches a target value.

@@ -166,7 +166,7 @@ export function Calculator({ countries, dataSources }: Props) {
         mode={mode}
         targetAge={targetAge}
       />
-      <CountryNotes sortedResults={sortedResults} countryById={countryById} />
+      <CountryNotes sortedResults={sortedResults} countryById={countryById} mode={mode} inputs={inputs} />
     </div>
   );
 }
