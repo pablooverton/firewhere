@@ -1,7 +1,7 @@
 {
-  "version": "0.5.0",
-  "lastUpdated": "2026-05-17",
-  "lastReviewed": "2026-05-17",
+  "version": "0.5.1",
+  "lastUpdated": "2026-05-20",
+  "lastReviewed": "2026-05-20",
   "schema": {
     "region": "One of: Americas, Europe, East Asia, Southeast Asia, Middle East & Africa, Oceania.",
     "colMultiplier": "Cost of living multiplier on user's USD baseline spending. 1.00 = US. Derived from Numbeo Cost of Living Index by Country, relative to US (US = 68.8 -> 1.00).",
@@ -1071,14 +1071,14 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "OECD Korea tax profile",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Korea National Tax Service — English",
+          "url": "https://www.nts.go.kr/english/main.do",
+          "lastVerified": "2026-05-20"
         },
         {
-          "name": "Korea National Health Insurance Service",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Korea NHIS — Guidance for foreigners",
+          "url": "https://www.nhis.or.kr/english/wbheaa02900m01.do",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1107,14 +1107,14 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "OECD Japan tax profile",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Japan National Tax Agency — English",
+          "url": "https://www.nta.go.jp/english/",
+          "lastVerified": "2026-05-20"
         },
         {
-          "name": "Japan National Health Insurance",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Wikipedia: Health care system in Japan",
+          "url": "https://en.wikipedia.org/wiki/Health_care_system_in_Japan",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1143,9 +1143,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Taiwan Ministry of Finance (foreign-source income)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Taiwan Ministry of Finance — English",
+          "url": "https://www.mof.gov.tw/Eng/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
