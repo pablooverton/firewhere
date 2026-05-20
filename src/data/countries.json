@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.5.2",
   "lastUpdated": "2026-05-20",
   "lastReviewed": "2026-05-20",
   "schema": {
@@ -1174,9 +1174,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Thailand Revenue Department (foreign income remittance)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Thailand Revenue Department — English",
+          "url": "https://www.rd.go.th/english/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1205,9 +1205,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Inland Revenue Board Malaysia (foreign-source exemption)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Inland Revenue Board Malaysia (LHDN) — English",
+          "url": "https://www.hasil.gov.my/en/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1236,9 +1236,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "General Department of Taxation Vietnam",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Embassy of Vietnam in the US — Taxation",
+          "url": "https://vietnamembassy-usa.org/basic-page/taxation",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1267,9 +1267,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "IRAS Singapore (territorial taxation)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "IRAS Singapore — Inland Revenue Authority",
+          "url": "https://www.iras.gov.sg/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1298,9 +1298,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "Philippines Retirement Authority (SRRV)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Philippine Retirement Authority — SRRV",
+          "url": "https://www.pra.gov.ph/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1329,9 +1329,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "Indonesia Directorate General of Taxes",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Indonesia Directorate General of Taxes (DJP) — English",
+          "url": "https://www.pajak.go.id/en",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1360,9 +1360,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "General Department of Taxation Cambodia",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Cambodia General Department of Taxation (GDT) — English",
+          "url": "https://www.tax.gov.kh/en/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1391,9 +1391,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "Laos Tax Department",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "PwC Worldwide Tax Summaries — Lao PDR",
+          "url": "https://taxsummaries.pwc.com/lao-pdr",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
