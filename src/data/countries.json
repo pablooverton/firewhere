@@ -1,5 +1,5 @@
 {
-  "version": "0.5.2",
+  "version": "0.5.3",
   "lastUpdated": "2026-05-20",
   "lastReviewed": "2026-05-20",
   "schema": {
@@ -58,19 +58,19 @@
       "confidence": "high",
       "sources": [
         {
-          "name": "Trinity Study / Bengen 4% rule",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Wikipedia: Trinity study (Bengen 4% rule)",
+          "url": "https://en.wikipedia.org/wiki/Trinity_study",
+          "lastVerified": "2026-05-20"
         },
         {
-          "name": "IRS federal income tax brackets",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "IRS federal income tax rates and brackets",
+          "url": "https://www.irs.gov/filing/federal-income-tax-rates-and-brackets",
+          "lastVerified": "2026-05-20"
         },
         {
-          "name": "KFF ACA marketplace premium data",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "KFF — Affordable Care Act research",
+          "url": "https://www.kff.org/topic/affordable-care-act/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -100,14 +100,14 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Canada Revenue Agency tax treaty with US",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Canada Revenue Agency (CRA)",
+          "url": "https://www.canada.ca/en/revenue-agency.html",
+          "lastVerified": "2026-05-20"
         },
         {
-          "name": "Provincial healthcare plan overviews",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Wikipedia: Healthcare in Canada",
+          "url": "https://en.wikipedia.org/wiki/Healthcare_in_Canada",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -136,14 +136,14 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "SAT Mexico tax authority (foreign income)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "SAT — Servicio de Administración Tributaria",
+          "url": "https://www.sat.gob.mx/",
+          "lastVerified": "2026-05-20"
         },
         {
-          "name": "Wikipedia: Visa policy of Mexico",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Wikipedia: Immigration to Mexico",
+          "url": "https://en.wikipedia.org/wiki/Immigration_to_Mexico",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -172,9 +172,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Costa Rica Ministerio de Hacienda (foreign-source income)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Costa Rica Ministerio de Hacienda",
+          "url": "https://www.hacienda.go.cr/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -203,9 +203,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Panama DGI (territorial tax system)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Panama DGI — Dirección General de Ingresos (MEF)",
+          "url": "https://dgi.mef.gob.pa/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -234,9 +234,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Colombia DIAN (resident worldwide taxation)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Colombia DIAN — Dirección de Impuestos y Aduanas Nacionales",
+          "url": "https://www.dian.gov.co/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -265,9 +265,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "SRI Ecuador (foreign income treatment)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "SRI Ecuador — Servicio de Rentas Internas",
+          "url": "https://www.sri.gob.ec/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -296,9 +296,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "DGI Uruguay (5/11-year tax holiday rules)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "DGI Uruguay — Dirección General Impositiva",
+          "url": "https://www.gub.uy/direccion-general-impositiva/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -327,9 +327,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "SII Chile (6-year foreign-source exemption for new residents)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "SII Chile — Servicio de Impuestos Internos",
+          "url": "https://www.sii.cl/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -358,9 +358,9 @@
       "confidence": "low",
       "sources": [
         {
-          "name": "AFIP Argentina (resident worldwide taxation)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "ARCA — Agencia de Recaudación y Control Aduanero (replaced AFIP Oct 2024)",
+          "url": "https://www.argentina.gob.ar/arca",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
