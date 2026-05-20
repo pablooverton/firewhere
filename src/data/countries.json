@@ -1,5 +1,5 @@
 {
-  "version": "0.5.3",
+  "version": "0.5.4",
   "lastUpdated": "2026-05-20",
   "lastReviewed": "2026-05-20",
   "schema": {
@@ -389,9 +389,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Portugal Autoridade Tributária (NHR/IFICI program)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Wikipedia: Non-Habitual Resident (Portugal NHR regime)",
+          "url": "https://en.wikipedia.org/wiki/Non-Habitual_Resident",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -420,9 +420,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Agencia Tributaria Spain (worldwide income, wealth tax)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Agencia Tributaria — Sede Electrónica",
+          "url": "https://sede.agenciatributaria.gob.es/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -451,9 +451,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Agenzia delle Entrate (7% retiree flat tax)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Agenzia delle Entrate — English",
+          "url": "https://www.agenziaentrate.gov.it/portale/web/english",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -482,9 +482,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "France Direction Générale des Finances Publiques (US-France treaty)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "DGFiP — impôts.gouv.fr",
+          "url": "https://www.impots.gouv.fr/accueil",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -513,9 +513,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Bundeszentralamt für Steuern (worldwide taxation for residents)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Bundeszentralamt für Steuern (BZSt) — English",
+          "url": "https://www.bzst.de/EN/Home/home_node.html",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -544,9 +544,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Belastingdienst Netherlands (Box 3 wealth taxation)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Belastingdienst Nederland",
+          "url": "https://www.belastingdienst.nl/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -575,9 +575,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Swiss Federal Tax Administration (forfait fiscal)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Swiss Federal Tax Administration (ESTV) — English",
+          "url": "https://www.estv.admin.ch/en",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -606,9 +606,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Bundesministerium für Finanzen Austria",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Bundesministerium für Finanzen — Austrian Ministry of Finance",
+          "url": "https://www.bmf.gv.at/en.html",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -637,9 +637,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "SPF Finances Belgium (worldwide taxation)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "SPF Finances Belgium — English",
+          "url": "https://finance.belgium.be/en",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -668,9 +668,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Revenue Commissioners Ireland",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Revenue Commissioners — Irish Tax and Customs",
+          "url": "https://www.revenue.ie/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -699,9 +699,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "HMRC UK (residence and tax treaty with US)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "HMRC — HM Revenue & Customs (gov.uk)",
+          "url": "https://www.gov.uk/government/organisations/hm-revenue-customs",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -730,9 +730,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Finanční správa Czech Republic",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Czech Financial Administration (Finanční správa) — English",
+          "url": "https://financnisprava.gov.cz/en",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -761,9 +761,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Polish Tax Office (Krajowa Administracja Skarbowa)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Poland KAS — podatki.gov.pl",
+          "url": "https://www.podatki.gov.pl/en/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -792,9 +792,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "FURS Slovenia (Financial Administration)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "FURS — Financial Administration of Slovenia",
+          "url": "https://www.fu.gov.si/en/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -823,9 +823,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Croatia Tax Administration",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Croatia Porezna uprava — Tax Administration",
+          "url": "https://porezna-uprava.gov.hr/en",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -854,9 +854,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "AADE Greece (7% foreign pension flat tax)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "AADE — Independent Authority for Public Revenue",
+          "url": "https://www.aade.gr/en",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -885,9 +885,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Skatteverket Sweden (worldwide taxation)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Wikipedia: Swedish Tax Agency (Skatteverket)",
+          "url": "https://en.wikipedia.org/wiki/Swedish_Tax_Agency",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -916,9 +916,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Skatteetaten Norway",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Skatteetaten — Norwegian Tax Administration",
+          "url": "https://www.skatteetaten.no/en/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -947,9 +947,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Skattestyrelsen Denmark",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Skattestyrelsen — Danish Tax Agency (skat.dk)",
+          "url": "https://www.skat.dk/en-us/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -978,9 +978,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "NAV Hungary (flat 15% personal income tax)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "NAV — National Tax and Customs Administration",
+          "url": "https://nav.gov.hu/en",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1009,9 +1009,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Iceland Revenue and Customs (Skatturinn)",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Skatturinn — Iceland Revenue and Customs",
+          "url": "https://www.skatturinn.is/english/",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
@@ -1040,9 +1040,9 @@
       "confidence": "medium",
       "sources": [
         {
-          "name": "Estonian Tax and Customs Board",
-          "url": null,
-          "lastVerified": "2026-05-17"
+          "name": "Estonian Tax and Customs Board (EMTA) — English",
+          "url": "https://www.emta.ee/en",
+          "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
