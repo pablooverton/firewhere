@@ -28,6 +28,9 @@ export function CountryNotes({ sortedResults, countryById, mode, inputs }: Props
               {c.name} <span className="text-gray-500 text-sm">{c.flag} · {c.region}</span>
             </h3>
             <p className="text-sm text-gray-400 mb-2">{c.residencyNote}</p>
+            {r.bracketTax && (
+              <BracketTaxDetail result={r} country={c} />
+            )}
             {r.premiumScales && c.premiumModel && (
               <ScaledPremiumDetail result={r} model={c.premiumModel} />
             )}
@@ -45,6 +48,22 @@ export function CountryNotes({ sortedResults, countryById, mode, inputs }: Props
         );
       })}
     </section>
+  );
+}
+
+function BracketTaxDetail({ result, country }: { result: FireResult; country: Country }) {
+  const brackets = country.taxBrackets!;
+  const topRate = brackets[brackets.length - 1].rate;
+  const allowance = country.personalAllowanceUSD ?? 0;
+  return (
+    <div className="mb-2 p-2 rounded-md border border-violet-900/40 bg-violet-950/20 text-xs text-violet-100/90">
+      <span className="font-semibold text-violet-200">Tax:</span>{' '}
+      effective {(result.effectiveTaxRate * 100).toFixed(1)}% on {formatUSD(result.preTaxWithdrawalNeeded)} withdrawal{' '}
+      <span className="text-violet-300/70">(progressive brackets, top rate {(topRate * 100).toFixed(0)}%)</span>
+      {allowance > 0 && (
+        <span className="text-violet-300/50"> — personal allowance {formatUSD(allowance)}</span>
+      )}
+    </div>
   );
 }
 

@@ -1,5 +1,5 @@
 {
-  "version": "0.7.0",
+  "version": "0.8.0",
   "lastUpdated": "2026-05-22",
   "lastReviewed": "2026-05-22",
   "schema": {
@@ -44,7 +44,17 @@
       "region": "Americas",
       "colMultiplier": 1,
       "annualHealthcareUSD": 12000,
-      "withdrawalTaxRate": 0.12,
+      "withdrawalTaxRate": 0.08,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0.1 },
+        { "thresholdUSD": 11925, "rate": 0.12 },
+        { "thresholdUSD": 48475, "rate": 0.22 },
+        { "thresholdUSD": 103350, "rate": 0.24 },
+        { "thresholdUSD": 197300, "rate": 0.32 },
+        { "thresholdUSD": 250525, "rate": 0.35 },
+        { "thresholdUSD": 626350, "rate": 0.37 }
+      ],
+      "personalAllowanceUSD": 15000,
       "swr": 0.04,
       "safetyScore": 2.443,
       "safetyRank": 128,
@@ -54,7 +64,7 @@
       "yearsToCitizenship": 5,
       "dualCitizenshipAllowed": true,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "Default base case. Healthcare estimate assumes pre-Medicare ACA marketplace coverage for a retired couple.",
+      "residencyNote": "Default base case. Healthcare estimate assumes pre-Medicare ACA marketplace coverage for a retired couple. Tax model uses 2025 federal brackets for a single filer with the 2026 standard deduction (~$15,000).",
       "confidence": "high",
       "sources": [
         {
@@ -68,13 +78,18 @@
           "lastVerified": "2026-05-20"
         },
         {
+          "name": "PwC Worldwide Tax Summaries — United States",
+          "url": "https://taxsummaries.pwc.com/united-states/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
+        },
+        {
           "name": "KFF — Affordable Care Act research",
           "url": "https://www.kff.org/topic/affordable-care-act/",
           "lastVerified": "2026-05-20"
         }
       ],
       "caveats": [
-        "Withdrawal tax rate assumes mixed taxable/IRA/Roth at moderate income. Heavy pre-tax skews higher.",
+        "Brackets are federal-only and assume single filer. State tax adds 0-13% depending on residence (CA/NY/HI top, FL/TX/WA/NV zero). Married filing jointly roughly halves the effective rate at this spending tier.",
         "Healthcare baseline excludes long-term care.",
         "Safety score is a national average; varies enormously by state and city."
       ]
@@ -122,7 +137,21 @@
       "region": "Americas",
       "colMultiplier": 0.62,
       "annualHealthcareUSD": 3000,
-      "withdrawalTaxRate": 0.1,
+      "withdrawalTaxRate": 0.21,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0.0192 },
+        { "thresholdUSD": 588, "rate": 0.064 },
+        { "thresholdUSD": 4989, "rate": 0.1088 },
+        { "thresholdUSD": 8768, "rate": 0.16 },
+        { "thresholdUSD": 10193, "rate": 0.1792 },
+        { "thresholdUSD": 12203, "rate": 0.2136 },
+        { "thresholdUSD": 24613, "rate": 0.2352 },
+        { "thresholdUSD": 38793, "rate": 0.3 },
+        { "thresholdUSD": 74062, "rate": 0.32 },
+        { "thresholdUSD": 98749, "rate": 0.34 },
+        { "thresholdUSD": 296247, "rate": 0.35 }
+      ],
+      "personalAllowanceUSD": 0,
       "swr": 0.04,
       "safetyScore": 2.636,
       "safetyRank": 135,
@@ -132,7 +161,7 @@
       "yearsToCitizenship": 5,
       "dualCitizenshipAllowed": true,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "Temporary Resident visa (4 years renewable) at ~$4,300/mo income or ~$72k savings. Permanent Resident after 4 years or with higher thresholds.",
+      "residencyNote": "Temporary Resident visa (4 years renewable) at ~$4,300/mo income or ~$72k savings. Permanent Resident after 4 years or with higher thresholds. Tax brackets converted at MXN/USD ≈ 0.058 (mid-2026); effective rate at $50k baseline is ~21%, materially above the prior flat-10% assumption — Mexico taxes residents on worldwide income at full progressive brackets.",
       "confidence": "medium",
       "sources": [
         {
@@ -144,6 +173,11 @@
           "name": "Wikipedia: Immigration to Mexico",
           "url": "https://en.wikipedia.org/wiki/Immigration_to_Mexico",
           "lastVerified": "2026-05-20"
+        },
+        {
+          "name": "PwC Worldwide Tax Summaries — Mexico",
+          "url": "https://taxsummaries.pwc.com/mexico/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
         }
       ],
       "caveats": [
@@ -439,7 +473,19 @@
       "region": "Europe",
       "colMultiplier": 0.71,
       "annualHealthcareUSD": 1500,
-      "withdrawalTaxRate": 0.1,
+      "withdrawalTaxRate": 0.26,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0.125 },
+        { "thresholdUSD": 9176, "rate": 0.157 },
+        { "thresholdUSD": 13846, "rate": 0.212 },
+        { "thresholdUSD": 19622, "rate": 0.241 },
+        { "thresholdUSD": 25398, "rate": 0.311 },
+        { "thresholdUSD": 32337, "rate": 0.349 },
+        { "thresholdUSD": 47399, "rate": 0.431 },
+        { "thresholdUSD": 51223, "rate": 0.446 },
+        { "thresholdUSD": 95297, "rate": 0.48 }
+      ],
+      "personalAllowanceUSD": 0,
       "swr": 0.04,
       "safetyScore": 1.371,
       "safetyRank": 7,
@@ -449,17 +495,22 @@
       "yearsToCitizenship": 5,
       "dualCitizenshipAllowed": true,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "D7 passive-income visa: ~$870/mo for primary applicant. NHR program revised in 2024; replacement IFICI regime applies to qualifying high-skilled workers but not general retirees. EU residency after 5 years.",
+      "residencyNote": "D7 passive-income visa: ~$870/mo for primary applicant. NHR (10% foreign-pension rate) phased out March 2024 for new entrants; IFICI successor applies only to qualifying high-skilled workers. New retirees default to standard progressive brackets — effective rate at $50k baseline is ~26%, far above the legacy NHR 10%. EU residency after 5 years.",
       "confidence": "medium",
       "sources": [
         {
           "name": "Wikipedia: Non-Habitual Resident (Portugal NHR regime)",
           "url": "https://en.wikipedia.org/wiki/Non-Habitual_Resident",
           "lastVerified": "2026-05-20"
+        },
+        {
+          "name": "PwC Worldwide Tax Summaries — Portugal",
+          "url": "https://taxsummaries.pwc.com/portugal/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
         }
       ],
       "caveats": [
-        "NHR 10% rate on foreign pensions phased out for new entrants after Mar 2024. New retirees default to standard progressive rates.",
+        "Bracket rates converted to USD at EUR/USD ≈ 1.10 (mid-2026). Solidarity surcharge of 2.5-5% applies above €80k / €250k (not modeled).",
         "Lisbon and Porto significantly more expensive than smaller cities."
       ]
     },
@@ -470,7 +521,16 @@
       "region": "Europe",
       "colMultiplier": 0.75,
       "annualHealthcareUSD": 2000,
-      "withdrawalTaxRate": 0.18,
+      "withdrawalTaxRate": 0.23,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0.19 },
+        { "thresholdUSD": 13695, "rate": 0.24 },
+        { "thresholdUSD": 22220, "rate": 0.3 },
+        { "thresholdUSD": 38720, "rate": 0.37 },
+        { "thresholdUSD": 66000, "rate": 0.45 },
+        { "thresholdUSD": 330000, "rate": 0.47 }
+      ],
+      "personalAllowanceUSD": 6105,
       "swr": 0.04,
       "safetyScore": 1.578,
       "safetyRank": 25,
@@ -480,17 +540,23 @@
       "yearsToCitizenship": 10,
       "dualCitizenshipAllowed": false,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "Non-Lucrative Visa: ~$2,800/mo passive income. Citizenship after 10 years (2 for Sephardic Jews / Ibero-Americans). EU residency after 5 years.",
+      "residencyNote": "Non-Lucrative Visa: ~$2,800/mo passive income. Citizenship after 10 years (2 for Sephardic Jews / Ibero-Americans). EU residency after 5 years. Tax model uses the state-level progressive scale; autonomous communities (region) add a parallel scale on top — typical add 3-7 percentage points depending on region.",
       "confidence": "medium",
       "sources": [
         {
           "name": "Agencia Tributaria — Sede Electrónica",
           "url": "https://sede.agenciatributaria.gob.es/",
           "lastVerified": "2026-05-20"
+        },
+        {
+          "name": "PwC Worldwide Tax Summaries — Spain",
+          "url": "https://taxsummaries.pwc.com/spain/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
         }
       ],
       "caveats": [
-        "Spain taxes worldwide income progressively (19-47%). Wealth tax exists regionally — Madrid 100% rebate, Catalonia and others do not.",
+        "Brackets are STATE only — Spanish residents also pay autonomous-community tax on a parallel scale. Madrid adds ~3pp at this income tier; Catalonia and others add 5-7pp. True total effective rate at $50k is ~26-30%, not the modeled 23%.",
+        "Personal minimum (mínimo personal) of ~€5,550 ($6,105) used as personal allowance. Spain also exempts wealth tax regionally — Madrid 100% rebate, Catalonia and others do not.",
         "Beckham Law (24% flat) applies to workers only, not retirees."
       ]
     },
@@ -533,6 +599,14 @@
       "colMultiplier": 0.98,
       "annualHealthcareUSD": 2500,
       "withdrawalTaxRate": 0.15,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0 },
+        { "thresholdUSD": 12423, "rate": 0.11 },
+        { "thresholdUSD": 31677, "rate": 0.3 },
+        { "thresholdUSD": 90575, "rate": 0.41 },
+        { "thresholdUSD": 194817, "rate": 0.45 }
+      ],
+      "personalAllowanceUSD": 0,
       "swr": 0.04,
       "safetyScore": 1.967,
       "safetyRank": 74,
@@ -542,17 +616,23 @@
       "yearsToCitizenship": 5,
       "dualCitizenshipAllowed": true,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "Visiteur (long-stay visitor) visa for retirees with sufficient income (~$1,500/mo) and private health insurance. EU residency after 5 years.",
+      "residencyNote": "Visiteur (long-stay visitor) visa for retirees with sufficient income (~$1,500/mo) and private health insurance. EU residency after 5 years. Tax model uses the 2024 barème thresholds (single share); brackets converted at EUR/USD ≈ 1.10.",
       "confidence": "medium",
       "sources": [
         {
           "name": "DGFiP — impôts.gouv.fr",
           "url": "https://www.impots.gouv.fr/accueil",
           "lastVerified": "2026-05-20"
+        },
+        {
+          "name": "PwC Worldwide Tax Summaries — France",
+          "url": "https://taxsummaries.pwc.com/france/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
         }
       ],
       "caveats": [
-        "US-France tax treaty generally favorable for US-source retirement income (often taxed only in US).",
+        "Brackets shown are for a single share (1 part). The family quotient system can reduce effective rate significantly for households with children — not modeled here.",
+        "CSG/CRDS social charges (~9.7% on most income) are not modeled separately. US-France tax treaty generally favorable for US-source retirement income (often taxed only in US, which would override this country's bracket math for the affected income).",
         "Mutuelle (top-up) insurance recommended for full coverage."
       ]
     },
@@ -563,7 +643,16 @@
       "region": "Europe",
       "colMultiplier": 1,
       "annualHealthcareUSD": 3000,
-      "withdrawalTaxRate": 0.18,
+      "withdrawalTaxRate": 0.19,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0 },
+        { "thresholdUSD": 13306, "rate": 0.2 },
+        { "thresholdUSD": 33000, "rate": 0.32 },
+        { "thresholdUSD": 55000, "rate": 0.4 },
+        { "thresholdUSD": 75272, "rate": 0.42 },
+        { "thresholdUSD": 305608, "rate": 0.45 }
+      ],
+      "personalAllowanceUSD": 0,
       "swr": 0.04,
       "safetyScore": 1.53,
       "safetyRank": 20,
@@ -573,16 +662,23 @@
       "yearsToCitizenship": 5,
       "dualCitizenshipAllowed": true,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "No dedicated retirement visa. Family-based, freelancer (Freiberufler), or self-employed visa pathways. EU residency after 5 years.",
+      "residencyNote": "No dedicated retirement visa. Family-based, freelancer (Freiberufler), or self-employed visa pathways. EU residency after 5 years. Germany's true tax curve is geometrically progressive across the 14-42% segment; the bracket model approximates with three sub-brackets calibrated to the 2025 Einkommensteuer formula. Grundfreibetrag (€12,096 ≈ $13,306) acts as the zero-rate band.",
       "confidence": "medium",
       "sources": [
         {
           "name": "Bundeszentralamt für Steuern (BZSt) — English",
           "url": "https://www.bzst.de/EN/Home/home_node.html",
           "lastVerified": "2026-05-20"
+        },
+        {
+          "name": "PwC Worldwide Tax Summaries — Germany",
+          "url": "https://taxsummaries.pwc.com/germany/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
         }
       ],
       "caveats": [
+        "Married-filing-jointly doubles all thresholds — effective rate roughly halves for couples at this spending tier (not modeled).",
+        "Solidaritätszuschlag (5.5% surtax) is mostly phased out for incomes below €67k; not modeled.",
         "Mandatory public health insurance for residents (GKV) or private (PKV) — coverage requirement is non-negotiable.",
         "Residents taxed on worldwide income."
       ]
@@ -749,7 +845,14 @@
       "region": "Europe",
       "colMultiplier": 0.99,
       "annualHealthcareUSD": 2000,
-      "withdrawalTaxRate": 0.15,
+      "withdrawalTaxRate": 0.14,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0 },
+        { "thresholdUSD": 15964, "rate": 0.2 },
+        { "thresholdUSD": 63843, "rate": 0.4 },
+        { "thresholdUSD": 158928, "rate": 0.45 }
+      ],
+      "personalAllowanceUSD": 0,
       "swr": 0.04,
       "safetyScore": 1.634,
       "safetyRank": 30,
@@ -759,16 +862,23 @@
       "yearsToCitizenship": 6,
       "dualCitizenshipAllowed": true,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "No retirement visa post-Brexit. Ancestry visa, family visa, or skilled worker route. ILR (settlement) after 5 years.",
+      "residencyNote": "No retirement visa post-Brexit. Ancestry visa, family visa, or skilled worker route. ILR (settlement) after 5 years. Tax model uses 2025/26 England/Wales brackets at GBP/USD ≈ 1.27; personal allowance £12,570 acts as the zero-rate band ($15,964).",
       "confidence": "medium",
       "sources": [
         {
           "name": "HMRC — HM Revenue & Customs (gov.uk)",
           "url": "https://www.gov.uk/government/organisations/hm-revenue-customs",
           "lastVerified": "2026-05-20"
+        },
+        {
+          "name": "PwC Worldwide Tax Summaries — United Kingdom",
+          "url": "https://taxsummaries.pwc.com/united-kingdom/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
         }
       ],
       "caveats": [
+        "Personal allowance tapers above £100,000 (£1 reduction per £2 of income), eliminated entirely above £125,140. Not modeled in bracket form.",
+        "Scotland has a separate, slightly more progressive scale (not modeled).",
         "NHS available for residents after settlement; private supplement common.",
         "Investor visa was closed in 2022."
       ]
@@ -1255,7 +1365,18 @@
         "minUSD": 2400,
         "maxUSD": 7500
       },
-      "withdrawalTaxRate": 0.08,
+      "withdrawalTaxRate": 0.17,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0.066 },
+        { "thresholdUSD": 10150, "rate": 0.165 },
+        { "thresholdUSD": 36250, "rate": 0.264 },
+        { "thresholdUSD": 63800, "rate": 0.385 },
+        { "thresholdUSD": 108750, "rate": 0.418 },
+        { "thresholdUSD": 217500, "rate": 0.44 },
+        { "thresholdUSD": 362500, "rate": 0.462 },
+        { "thresholdUSD": 725000, "rate": 0.495 }
+      ],
+      "personalAllowanceUSD": 0,
       "swr": 0.04,
       "safetyScore": 1.736,
       "safetyRank": 41,
@@ -1265,7 +1386,7 @@
       "yearsToCitizenship": 5,
       "dualCitizenshipAllowed": false,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "F-2 long-term residency or F-5 permanent residency. No dedicated retirement visa; pathway requires prior residency, family ties, or qualifying income. NHIS premium for foreign regional subscribers scales with declared income at ~8.2% (incl. long-term care), floored at the foreigner-regional minimum (~$110/month) and capped at the statutory income ceiling.",
+      "residencyNote": "F-2 long-term residency or F-5 permanent residency. No dedicated retirement visa; pathway requires prior residency, family ties, or qualifying income. NHIS premium for foreign regional subscribers scales with declared income at ~8.2% (incl. long-term care), floored at the foreigner-regional minimum (~$110/month) and capped at the statutory income ceiling. Tax brackets converted at KRW/USD ≈ 0.000725; each bracket includes the 10% local income tax surcharge (e.g. 6% national + 0.6% local = 6.6% effective).",
       "confidence": "medium",
       "sources": [
         {
@@ -1277,12 +1398,18 @@
           "name": "Korea NHIS — Guidance for foreigners",
           "url": "https://www.nhis.or.kr/english/wbheaa02900m01.do",
           "lastVerified": "2026-05-20"
+        },
+        {
+          "name": "PwC Worldwide Tax Summaries — Korea",
+          "url": "https://taxsummaries.pwc.com/republic-of-korea/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
         }
       ],
       "caveats": [
         "COL multiplier (0.90) is higher than commonly assumed — Seoul is expensive for major appliances and housing.",
         "NHIS healthcare cost scales with declared income: ~$2,400/yr floor for low spenders, ~$7,500/yr at the income cap. The flat $3,500 figure is now a documentation fallback; the model uses the income-scaled curve.",
         "Foreigner regional subscribers cannot fall below the all-subscriber average premium even if their declared income would otherwise produce a lower figure.",
+        "Tax brackets include local income tax surcharge but assume no pension-income deduction. Korea's pension-income deduction can reduce effective rate by 5-10 pp for retirees drawing primarily from 401k/IRA-equivalent sources — verify with a Korean tax advisor for individual planning.",
         "Visa path is the practical constraint for most US citizens, not the math."
       ]
     },
@@ -1299,7 +1426,17 @@
         "minUSD": 1500,
         "maxUSD": 7500
       },
-      "withdrawalTaxRate": 0.1,
+      "withdrawalTaxRate": 0.22,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0.15 },
+        { "thresholdUSD": 13065, "rate": 0.2 },
+        { "thresholdUSD": 22110, "rate": 0.3 },
+        { "thresholdUSD": 46565, "rate": 0.33 },
+        { "thresholdUSD": 60300, "rate": 0.43 },
+        { "thresholdUSD": 120600, "rate": 0.5 },
+        { "thresholdUSD": 268000, "rate": 0.55 }
+      ],
+      "personalAllowanceUSD": 3216,
       "swr": 0.04,
       "safetyScore": 1.44,
       "safetyRank": 12,
@@ -1309,7 +1446,7 @@
       "yearsToCitizenship": 5,
       "dualCitizenshipAllowed": false,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "No dedicated retirement visa. Long-term resident or spouse-of-Japanese visa are common pathways. Highly Skilled Professional visa accelerates PR for qualifying workers. National Health Insurance (kokumin kenko hoken) for non-employees scales with prior-year income: ~10% combined (medical + elderly support + long-term care), floored at the per-household equal-share base, and capped at the FY2025 statutory ceiling (combined ~¥1.06M ≈ $7,000).",
+      "residencyNote": "No dedicated retirement visa. Long-term resident or spouse-of-Japanese visa are common pathways. Highly Skilled Professional visa accelerates PR for qualifying workers. National Health Insurance (kokumin kenko hoken) for non-employees scales with prior-year income: ~10% combined (medical + elderly support + long-term care), floored at the per-household equal-share base, and capped at the FY2025 statutory ceiling (combined ~¥1.06M ≈ $7,000). Tax model uses national progressive rates + 10pp inhabitant tax baked into each bracket; basic personal deduction ¥480k ≈ $3,216 used as personal allowance. JPY/USD ≈ 0.0067.",
       "confidence": "medium",
       "sources": [
         {
@@ -1321,6 +1458,11 @@
           "name": "Wikipedia: Health care system in Japan",
           "url": "https://en.wikipedia.org/wiki/Health_care_system_in_Japan",
           "lastVerified": "2026-05-20"
+        },
+        {
+          "name": "PwC Worldwide Tax Summaries — Japan",
+          "url": "https://taxsummaries.pwc.com/japan/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
         }
       ],
       "caveats": [
@@ -1367,7 +1509,18 @@
       "region": "Southeast Asia",
       "colMultiplier": 0.55,
       "annualHealthcareUSD": 2000,
-      "withdrawalTaxRate": 0.1,
+      "withdrawalTaxRate": 0.17,
+      "taxBrackets": [
+        { "thresholdUSD": 0, "rate": 0 },
+        { "thresholdUSD": 4350, "rate": 0.05 },
+        { "thresholdUSD": 8700, "rate": 0.1 },
+        { "thresholdUSD": 14500, "rate": 0.15 },
+        { "thresholdUSD": 21750, "rate": 0.2 },
+        { "thresholdUSD": 29000, "rate": 0.25 },
+        { "thresholdUSD": 58000, "rate": 0.3 },
+        { "thresholdUSD": 145000, "rate": 0.35 }
+      ],
+      "personalAllowanceUSD": 0,
       "swr": 0.04,
       "safetyScore": 2.017,
       "safetyRank": 86,
@@ -1377,17 +1530,23 @@
       "yearsToCitizenship": 10,
       "dualCitizenshipAllowed": true,
       "foreignerPropertyOwnership": "leasehold-only",
-      "residencyNote": "LTR visa: $80k+ passive income or $1M assets, 10-year stay. Retirement (O-A/O-X) visa: 50+, savings + monthly income proof. Thailand Privilege (Elite) visa: $14k-$70k+ membership.",
+      "residencyNote": "LTR visa: $80k+ passive income or $1M assets, 10-year stay. Retirement (O-A/O-X) visa: 50+, savings + monthly income proof. Thailand Privilege (Elite) visa: $14k-$70k+ membership. Tax brackets converted at THB/USD ≈ 0.029; first 150k THB ($4,350) is tax-exempt (acts as the zero-rate band).",
       "confidence": "medium",
       "sources": [
         {
           "name": "Thailand Revenue Department — English",
           "url": "https://www.rd.go.th/english/",
           "lastVerified": "2026-05-20"
+        },
+        {
+          "name": "PwC Worldwide Tax Summaries — Thailand",
+          "url": "https://taxsummaries.pwc.com/thailand/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
         }
       ],
       "caveats": [
-        "2024 rule change: foreign income remitted in any year is taxable for residents. Major reversal of prior loophole.",
+        "2024 rule change: foreign income remitted to Thailand in any year is taxable for residents. Bracket math assumes full remittance — a retiree who keeps savings abroad and remits only a portion would face a proportionally lower effective rate.",
+        "LTR visa holders may qualify for a special 17% flat-rate regime on Thai-source income — not modeled.",
         "Southern provinces near Malaysian border have insurgent activity — not relevant to typical expat areas but reflected in national GPI."
       ]
     },

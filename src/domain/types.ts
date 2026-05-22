@@ -81,6 +81,19 @@ export interface PremiumModel {
   maxUSD: number;
 }
 
+/**
+ * One marginal tax bracket. The bracket's rate applies to taxable income above
+ * thresholdUSD up to (but not including) the next bracket's thresholdUSD; the
+ * top bracket applies to all income above its threshold. Brackets are sorted
+ * ascending by thresholdUSD and the first bracket has thresholdUSD = 0.
+ */
+export interface TaxBracket {
+  /** Lower bound of this bracket in USD. First bracket = 0. */
+  thresholdUSD: number;
+  /** Marginal tax rate within this bracket, [0, 1). */
+  rate: number;
+}
+
 export interface Country {
   id: string;
   name: string;
@@ -92,8 +105,12 @@ export interface Country {
   annualHealthcareUSD: number;
   /** Optional income-scaled premium curve (Korea NHIS, Japan NHI). When present, overrides annualHealthcareUSD at compute time. */
   premiumModel?: PremiumModel;
-  /** Approximate effective tax rate on retirement withdrawals. */
+  /** Approximate effective tax rate on retirement withdrawals. Used directly when taxBrackets is absent; treated as a documentation fallback (effective rate at moderate retirement income, typically calibrated near $50k baseline) when taxBrackets is present. */
   withdrawalTaxRate: number;
+  /** Optional progressive bracket structure. When present, replaces withdrawalTaxRate at compute time. Brackets are evaluated on taxable income = max(0, preTax - personalAllowanceUSD). */
+  taxBrackets?: TaxBracket[];
+  /** Personal allowance / standard deduction in USD. Subtracted from preTax before bracket evaluation. Only meaningful when taxBrackets is present. */
+  personalAllowanceUSD?: number;
   /** Suggested safe withdrawal rate baseline. */
   swr: number;
   /** Global Peace Index score. 1.0 = most peaceful, ~3.5 = least. Lower is safer. */
@@ -158,6 +175,10 @@ export interface FireResult {
   annualHealthcareUSD: number;
   /** True if this country's healthcare premium scales with income. */
   premiumScales: boolean;
+  /** Effective tax rate actually used in this calculation. Equals withdrawalTaxRate for flat-tax countries; computed from brackets for bracket countries. */
+  effectiveTaxRate: number;
+  /** True if this country uses progressive bracket-level tax math. */
+  bracketTax: boolean;
 }
 
 export type SafetyThreshold = 'any' | 'very-safe' | 'safe' | 'moderate';

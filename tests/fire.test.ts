@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   annualHealthcareCost,
+  bracketEffectiveRate,
+  bracketTax,
   bridgeYears,
   BRIDGE_THRESHOLD_YEARS,
   coastFireYears,
@@ -18,6 +20,7 @@ import {
   type FilterCriteria,
   type PremiumModel,
   type Region,
+  type TaxBracket,
   type UserInputs,
 } from '../src/domain/types';
 import countriesData from '../src/data/countries.json';
@@ -545,12 +548,14 @@ describe('computeCountryFire with income-scaled premium', () => {
   it('Korea FIRE result exposes the actual scaled premium, not the flat fallback', () => {
     const r = computeCountryFire(baseUser, korea);
     expect(r.premiumScales).toBe(true);
-    // For a $50k baseline at COL 0.9, rate 0.082, tax 0.08:
-    // interior preTax = 45_000 / (1 - 0.08 - 0.082) = 45_000 / 0.838 ≈ 53_699
-    // premium = 0.082 * 53_699 ≈ 4_403, which is interior (between 2400 and 7500)
+    expect(r.bracketTax).toBe(true);
+    // With Korea brackets + NHIS scaling at $50k baseline, the joint solver
+    // converges to preTax ≈ $61.8k and premium ≈ $5066. Premium is interior
+    // (above the $2400 floor, below the $7500 ceiling).
     expect(r.annualHealthcareUSD).toBeGreaterThan(korea.premiumModel!.minUSD);
     expect(r.annualHealthcareUSD).toBeLessThan(korea.premiumModel!.maxUSD);
-    expect(r.annualHealthcareUSD).toBeCloseTo(4_403, -1);
+    expect(r.annualHealthcareUSD).toBeGreaterThan(4_500);
+    expect(r.annualHealthcareUSD).toBeLessThan(5_500);
   });
 
   it('low-spending user hits Korea NHIS floor', () => {
@@ -588,9 +593,266 @@ describe('computeCountryFire with income-scaled premium', () => {
     expect(r.localizedSpending).toBeCloseTo(expected, 4);
   });
 
-  it('preTax = localizedSpending / (1 - tax) holds for the scaled case', () => {
+  it('preTax = localizedSpending / (1 - effectiveTaxRate) holds for the scaled case', () => {
     const r = computeCountryFire(baseUser, korea);
-    expect(r.preTaxWithdrawalNeeded).toBeCloseTo(r.localizedSpending / (1 - korea.withdrawalTaxRate), 2);
+    // With brackets, the relation uses the bracket-derived effective rate exposed on the result.
+    expect(r.preTaxWithdrawalNeeded).toBeCloseTo(r.localizedSpending / (1 - r.effectiveTaxRate), 2);
+  });
+});
+
+describe('bracketTax', () => {
+  // US 2025 federal single brackets, used as the standard test fixture
+  const usBrackets: TaxBracket[] = [
+    { thresholdUSD: 0, rate: 0.1 },
+    { thresholdUSD: 11925, rate: 0.12 },
+    { thresholdUSD: 48475, rate: 0.22 },
+    { thresholdUSD: 103350, rate: 0.24 },
+    { thresholdUSD: 197300, rate: 0.32 },
+    { thresholdUSD: 250525, rate: 0.35 },
+    { thresholdUSD: 626350, rate: 0.37 },
+  ];
+  const usAllowance = 15000;
+
+  it('returns 0 for zero income', () => {
+    expect(bracketTax(0, usBrackets, usAllowance)).toBe(0);
+  });
+
+  it('returns 0 when income is at or below the allowance', () => {
+    expect(bracketTax(15000, usBrackets, usAllowance)).toBe(0);
+    expect(bracketTax(10000, usBrackets, usAllowance)).toBe(0);
+  });
+
+  it('returns 0 when there are no brackets', () => {
+    expect(bracketTax(50000, [], 0)).toBe(0);
+  });
+
+  it('first-bracket-only income taxed at first rate', () => {
+    // Income = $20k, allowance = $15k → taxable = $5k, all in 10% bracket
+    expect(bracketTax(20000, usBrackets, usAllowance)).toBeCloseTo(500, 4);
+  });
+
+  it('multi-bracket income sums each bracket portion', () => {
+    // Income = $50k, allowance = $15k → taxable = $35k
+    // Bracket 1: $0-$11925 at 10% = $1192.50
+    // Bracket 2: $11925-$35000 at 12% = $2769
+    // Total: $3961.50, effective on $50k ≈ 7.92%
+    expect(bracketTax(50000, usBrackets, usAllowance)).toBeCloseTo(3961.5, 1);
+  });
+
+  it('top-bracket income applies the top rate to all income above the top threshold', () => {
+    // Income = $1M, allowance = $15k → taxable = $985k
+    // Through bracket 7 boundary at $626350: cumulative tax through prior brackets
+    // Brackets 1-6: $1192.50 + ($48475-$11925)*0.12 + ($103350-$48475)*0.22 + ($197300-$103350)*0.24 +
+    //               ($250525-$197300)*0.32 + ($626350-$250525)*0.35
+    //             = 1192.5 + 4386 + 12072.5 + 22548 + 17032 + 131538.75 = 188769.75
+    // Top bracket: ($985000 - $626350) * 0.37 = $358650 * 0.37 = $132700.5
+    // Total ≈ $321470.25
+    expect(bracketTax(1_000_000, usBrackets, usAllowance)).toBeCloseTo(321470.25, 0);
+  });
+
+  it('income exactly at a bracket boundary taxes nothing in the next bracket', () => {
+    // Income = $63475 ($48475 taxable + $15k allowance) → exactly at end of 12% bracket
+    // Bracket 1: $11925 * 0.10 = $1192.50
+    // Bracket 2: ($48475 - $11925) * 0.12 = $36550 * 0.12 = $4386
+    // Total: $5578.50; nothing in 22% bracket
+    expect(bracketTax(63475, usBrackets, usAllowance)).toBeCloseTo(5578.5, 1);
+  });
+
+  it('handles allowance = 0 correctly', () => {
+    // No allowance, $20k income, $20k taxable
+    // Bracket 1: $11925 * 0.10 = $1192.50
+    // Bracket 2: ($20000 - $11925) * 0.12 = $969
+    // Total: $2161.50
+    expect(bracketTax(20000, usBrackets, 0)).toBeCloseTo(2161.5, 1);
+  });
+});
+
+describe('bracketEffectiveRate', () => {
+  const flat20: TaxBracket[] = [{ thresholdUSD: 0, rate: 0.2 }];
+
+  it('returns 0 for zero income', () => {
+    expect(bracketEffectiveRate(0, flat20, 0)).toBe(0);
+  });
+
+  it('flat single-bracket schedule produces the same effective rate at any income', () => {
+    expect(bracketEffectiveRate(10000, flat20, 0)).toBeCloseTo(0.2, 6);
+    expect(bracketEffectiveRate(100000, flat20, 0)).toBeCloseTo(0.2, 6);
+    expect(bracketEffectiveRate(1_000_000, flat20, 0)).toBeCloseTo(0.2, 6);
+  });
+
+  it('progressive schedule produces monotonically rising effective rate', () => {
+    const brackets: TaxBracket[] = [
+      { thresholdUSD: 0, rate: 0.1 },
+      { thresholdUSD: 50000, rate: 0.3 },
+      { thresholdUSD: 200000, rate: 0.45 },
+    ];
+    const rates = [25000, 50000, 100000, 200000, 500000, 1_000_000].map((x) => bracketEffectiveRate(x, brackets, 0));
+    for (let i = 1; i < rates.length; i++) {
+      expect(rates[i]).toBeGreaterThanOrEqual(rates[i - 1]);
+    }
+  });
+
+  it('approaches the top rate as income → ∞', () => {
+    const brackets: TaxBracket[] = [
+      { thresholdUSD: 0, rate: 0.1 },
+      { thresholdUSD: 100000, rate: 0.5 },
+    ];
+    const rate10x = bracketEffectiveRate(1_000_000, brackets, 0);
+    const rate100x = bracketEffectiveRate(10_000_000, brackets, 0);
+    expect(rate10x).toBeGreaterThan(0.4);
+    expect(rate100x).toBeGreaterThan(rate10x);
+    expect(rate100x).toBeLessThan(0.5);
+  });
+});
+
+describe('computeCountryFire with bracket tax', () => {
+  const baseUser: UserInputs = {
+    currentSavings: 0,
+    annualSavings: 50_000,
+    currentSpending: 50_000,
+    currentAge: 40,
+    realReturn: 0.05,
+  };
+  const us = countriesData.countries.find((c) => c.id === 'us') as Country;
+  const pt = countriesData.countries.find((c) => c.id === 'pt') as Country;
+  const fr = countriesData.countries.find((c) => c.id === 'fr') as Country;
+  const mx = countriesData.countries.find((c) => c.id === 'mx') as Country;
+
+  it('US uses bracket tax with the standard deduction', () => {
+    const r = computeCountryFire(baseUser, us);
+    expect(r.bracketTax).toBe(true);
+    // Effective at $50k spending baseline is well below the top bracket
+    expect(r.effectiveTaxRate).toBeGreaterThan(0.05);
+    expect(r.effectiveTaxRate).toBeLessThan(0.15);
+  });
+
+  it('US effective rate is roughly the flat fallback for moderate retirees', () => {
+    const r = computeCountryFire(baseUser, us);
+    // Calibration check: the flat fallback (0.08) should be within ~3pp of the bracket-derived rate at $50k
+    expect(Math.abs(r.effectiveTaxRate - us.withdrawalTaxRate)).toBeLessThan(0.03);
+  });
+
+  it('Portugal post-NHR bracket tax produces a much higher FIRE number than the legacy flat 0.10', () => {
+    const r = computeCountryFire(baseUser, pt);
+    expect(r.bracketTax).toBe(true);
+    // PT post-NHR is significantly more expensive than the legacy NHR 10% suggested
+    expect(r.effectiveTaxRate).toBeGreaterThan(0.2);
+  });
+
+  it('France low brackets at moderate income approach the legacy flat 0.15', () => {
+    const r = computeCountryFire(baseUser, fr);
+    expect(r.bracketTax).toBe(true);
+    expect(Math.abs(r.effectiveTaxRate - 0.15)).toBeLessThan(0.05);
+  });
+
+  it('higher spending pushes the effective bracket rate up monotonically', () => {
+    const spends = [20_000, 50_000, 100_000, 200_000];
+    const rates = spends.map((s) => computeCountryFire({ ...baseUser, currentSpending: s }, us).effectiveTaxRate);
+    for (let i = 1; i < rates.length; i++) {
+      expect(rates[i]).toBeGreaterThanOrEqual(rates[i - 1]);
+    }
+  });
+
+  it('FIRE number rises monotonically with spending under bracket tax', () => {
+    const spends = [20_000, 50_000, 100_000, 200_000];
+    const fires = spends.map((s) => computeCountryFire({ ...baseUser, currentSpending: s }, mx).fireNumber);
+    for (let i = 1; i < fires.length; i++) {
+      expect(fires[i]).toBeGreaterThan(fires[i - 1]);
+    }
+  });
+
+  it('preTax = localizedSpending / (1 - effectiveTaxRate) holds for bracket-only countries', () => {
+    const r = computeCountryFire(baseUser, fr);
+    expect(r.preTaxWithdrawalNeeded).toBeCloseTo(r.localizedSpending / (1 - r.effectiveTaxRate), 2);
+  });
+
+  it('non-bracket countries report bracketTax = false and use the flat rate as effectiveTaxRate', () => {
+    const py = countriesData.countries.find((c) => c.id === 'py') as Country;
+    const r = computeCountryFire(baseUser, py);
+    expect(r.bracketTax).toBe(false);
+    expect(r.effectiveTaxRate).toBe(py.withdrawalTaxRate);
+  });
+});
+
+describe('Korea joint bracket × NHIS scaling', () => {
+  const baseUser: UserInputs = {
+    currentSavings: 0,
+    annualSavings: 50_000,
+    currentSpending: 50_000,
+    currentAge: 40,
+    realReturn: 0.05,
+  };
+  const korea = countriesData.countries.find((c) => c.id === 'kr') as Country;
+
+  it('Korea has BOTH taxBrackets and premiumModel', () => {
+    expect(korea.taxBrackets).toBeDefined();
+    expect(korea.premiumModel).toBeDefined();
+  });
+
+  it('Korea joint result satisfies preTax = (S*COL + premium) / (1 - effectiveTax)', () => {
+    const r = computeCountryFire(baseUser, korea);
+    const sc = baseUser.currentSpending * korea.colMultiplier;
+    const expected = (sc + r.annualHealthcareUSD) / (1 - r.effectiveTaxRate);
+    expect(r.preTaxWithdrawalNeeded).toBeCloseTo(expected, 2);
+  });
+
+  it('Korea joint solver converges (premium is consistent with rate × preTax inside the curve)', () => {
+    const r = computeCountryFire(baseUser, korea);
+    const model = korea.premiumModel!;
+    const expectedPremium = Math.max(model.minUSD, Math.min(model.maxUSD, model.rate * r.preTaxWithdrawalNeeded));
+    expect(r.annualHealthcareUSD).toBeCloseTo(expectedPremium, 1);
+  });
+
+  it('Korea FIRE number at high spending hits the premium ceiling', () => {
+    const high: UserInputs = { ...baseUser, currentSpending: 150_000 };
+    const r = computeCountryFire(high, korea);
+    expect(r.annualHealthcareUSD).toBe(korea.premiumModel!.maxUSD);
+  });
+
+  it('Korea FIRE number at low spending hits the premium floor', () => {
+    const low: UserInputs = { ...baseUser, currentSpending: 10_000 };
+    const r = computeCountryFire(low, korea);
+    expect(r.annualHealthcareUSD).toBe(korea.premiumModel!.minUSD);
+  });
+});
+
+describe('countries.json integrity for bracket fields', () => {
+  it('every taxBrackets array is non-empty and starts at thresholdUSD = 0', () => {
+    for (const c of countriesData.countries) {
+      if ('taxBrackets' in c && Array.isArray((c as Country).taxBrackets)) {
+        const brackets = (c as Country).taxBrackets!;
+        expect(brackets.length).toBeGreaterThan(0);
+        expect(brackets[0].thresholdUSD).toBe(0);
+      }
+    }
+  });
+
+  it('every taxBrackets array has strictly ascending thresholds', () => {
+    for (const c of countriesData.countries) {
+      if ('taxBrackets' in c && Array.isArray((c as Country).taxBrackets)) {
+        const brackets = (c as Country).taxBrackets!;
+        for (let i = 1; i < brackets.length; i++) {
+          expect(brackets[i].thresholdUSD).toBeGreaterThan(brackets[i - 1].thresholdUSD);
+        }
+      }
+    }
+  });
+
+  it('every bracket rate is in [0, 1)', () => {
+    for (const c of countriesData.countries) {
+      if ('taxBrackets' in c && Array.isArray((c as Country).taxBrackets)) {
+        for (const b of (c as Country).taxBrackets!) {
+          expect(b.rate).toBeGreaterThanOrEqual(0);
+          expect(b.rate).toBeLessThan(1);
+        }
+      }
+    }
+  });
+
+  it('exactly 10 countries have bracket data', () => {
+    const withBrackets = countriesData.countries.filter((c) => 'taxBrackets' in c).map((c) => c.id);
+    expect(withBrackets.length).toBe(10);
+    expect(withBrackets.sort()).toEqual(['de', 'es', 'fr', 'gb', 'jp', 'kr', 'mx', 'pt', 'th', 'us'].sort());
   });
 });
 
