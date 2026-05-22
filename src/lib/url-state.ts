@@ -74,25 +74,35 @@ export interface DecodedState {
   filters: FilterCriteria;
   mode: Mode;
   targetAge: number;
+  /** Set when the inbound URL came from a known cross-tool handoff. Used to show a banner. */
+  source?: 'lumpslam';
 }
 
 export function decodeStateFromURL(): Partial<DecodedState> | null {
   if (typeof window === 'undefined') return null;
   const p = new URLSearchParams(window.location.search);
   if (p.toString().length === 0) return null;
-  const num = (k: string, fallback: number): number => {
-    const v = Number(p.get(k));
-    return Number.isFinite(v) ? v : fallback;
+  const source = p.get('source') === 'lumpslam' ? 'lumpslam' : undefined;
+  /**
+   * Reads a numeric param. firewhere's own short-code convention (s, as, sp, age, r) is used
+   * for shareable links; lumpslam's outbound handoff sends long-form names. Try the long name
+   * first when source=lumpslam, then fall back to the short name in either case.
+   */
+  const num = (shortKey: string, longKey: string, fallback: number): number => {
+    const raw = (source === 'lumpslam' ? p.get(longKey) : null) ?? p.get(shortKey);
+    const v = Number(raw);
+    return Number.isFinite(v) && raw !== null ? v : fallback;
   };
   const inputs: UserInputs = {
-    currentSavings: num('s', defaultInputs.currentSavings),
-    annualSavings: num('as', defaultInputs.annualSavings),
-    currentSpending: num('sp', defaultInputs.currentSpending),
-    currentAge: num('age', defaultInputs.currentAge),
-    realReturn: num('r', defaultInputs.realReturn),
+    currentSavings: num('s', 'currentSavings', defaultInputs.currentSavings),
+    annualSavings: num('as', 'annualSavings', defaultInputs.annualSavings),
+    currentSpending: num('sp', 'currentSpending', defaultInputs.currentSpending),
+    currentAge: num('age', 'currentAge', defaultInputs.currentAge),
+    realReturn: num('r', 'realReturn', defaultInputs.realReturn),
   };
   const mode: Mode = p.get('mode') === 'coast' ? 'coast' : 'fire';
-  const targetAge = num('target', DEFAULT_TARGET_RETIREMENT_AGE);
+  // `target` has no long-form equivalent — it's a firewhere-internal field, no lumpslam handoff for it.
+  const targetAge = num('target', 'target', DEFAULT_TARGET_RETIREMENT_AGE);
   const filters: FilterCriteria = {
     regions: p.has('regions')
       ? (p.get('regions') ?? '').split(',').filter((r): r is Region => ALL_REGIONS.includes(r as Region))
@@ -107,5 +117,5 @@ export function decodeStateFromURL(): Partial<DecodedState> | null {
     property: (p.get('prop') as FilterCriteria['property']) ?? 'any',
     requireDualCitizenship: p.get('dual') === '1',
   };
-  return { inputs, filters, mode, targetAge };
+  return { inputs, filters, mode, targetAge, source };
 }

@@ -31,6 +31,7 @@ export function Calculator({ countries, dataSources }: Props) {
   const [mode, setMode] = useState<Mode>('fire');
   const [targetAge, setTargetAge] = useState<number>(DEFAULT_TARGET_RETIREMENT_AGE);
   const [copied, setCopied] = useState(false);
+  const [prefilledFromLumpslam, setPrefilledFromLumpslam] = useState(false);
 
   // Load state from URL on mount (post-hydration). Static export means the initial render
   // has no access to window.location, so we hydrate state from the URL once on the client.
@@ -48,6 +49,7 @@ export function Calculator({ countries, dataSources }: Props) {
     if (decoded.filters && countActiveAdvancedFilters(decoded.filters) > 0) {
       setShowAdvanced(true);
     }
+    if (decoded.source === 'lumpslam') setPrefilledFromLumpslam(true);
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
@@ -138,6 +140,17 @@ export function Calculator({ countries, dataSources }: Props) {
 
   return (
     <div className="space-y-10">
+      {prefilledFromLumpslam && (
+        <div className="px-4 py-3 rounded-md border border-blue-700 bg-blue-950/40 text-sm text-blue-100">
+          <strong className="text-blue-200">Inputs pre-filled from Lump Slam.</strong> Adjust as needed.{' '}
+          <a
+            href="https://www.pablooverton.com/lumpslam/profile/"
+            className="text-blue-300 underline hover:text-blue-200"
+          >
+            ← back to Lump Slam
+          </a>
+        </div>
+      )}
       <InputsPanel
         inputs={inputs}
         setInputs={setInputs}
