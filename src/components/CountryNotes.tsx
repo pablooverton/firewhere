@@ -2,6 +2,7 @@
 
 import { bridgeYears, hasLongBridge, SOCIAL_SECURITY_EARLIEST_AGE } from '@/domain/fire';
 import type { Country, FireResult, Mode, UserInputs } from '@/domain/types';
+import { formatUSD } from '@/lib/format';
 import { buildLumpslamURL } from '@/lib/lumpslam';
 
 interface Props {
@@ -27,6 +28,9 @@ export function CountryNotes({ sortedResults, countryById, mode, inputs }: Props
               {c.name} <span className="text-gray-500 text-sm">{c.flag} · {c.region}</span>
             </h3>
             <p className="text-sm text-gray-400 mb-2">{c.residencyNote}</p>
+            {r.premiumScales && c.premiumModel && (
+              <ScaledPremiumDetail result={r} model={c.premiumModel} />
+            )}
             {showBridgeWarning && (
               <BridgeWarning fireAge={r.fireAge} lumpslamURL={lumpslamURL} />
             )}
@@ -41,6 +45,27 @@ export function CountryNotes({ sortedResults, countryById, mode, inputs }: Props
         );
       })}
     </section>
+  );
+}
+
+function ScaledPremiumDetail({
+  result,
+  model,
+}: {
+  result: FireResult;
+  model: NonNullable<Country['premiumModel']>;
+}) {
+  const atFloor = result.annualHealthcareUSD === model.minUSD;
+  const atCeiling = result.annualHealthcareUSD === model.maxUSD;
+  const position = atFloor ? 'at floor' : atCeiling ? 'at ceiling' : 'scales with income';
+  return (
+    <div className="mb-2 p-2 rounded-md border border-sky-900/40 bg-sky-950/20 text-xs text-sky-100/90">
+      <span className="font-semibold text-sky-200">Healthcare:</span>{' '}
+      {formatUSD(result.annualHealthcareUSD)}/yr <span className="text-sky-300/70">({position})</span>{' '}
+      <span className="text-sky-300/50">
+        — public premium ~{(model.rate * 100).toFixed(1)}% of declared income, bounded {formatUSD(model.minUSD)}–{formatUSD(model.maxUSD)}
+      </span>
+    </div>
   );
 }
 

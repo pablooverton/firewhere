@@ -65,6 +65,22 @@ export interface UserInputs {
   realReturn: number;
 }
 
+/**
+ * Income-scaled health premium curve. Models systems like Korea NHIS and Japan NHI
+ * where the public-insurance premium scales with declared income, bounded by a
+ * statutory floor and ceiling. Total annual healthcare cost is then
+ *   clamp(rate * preTaxWithdrawal, minUSD, maxUSD).
+ */
+export interface PremiumModel {
+  type: 'income-scaled';
+  /** Marginal premium rate as a fraction of preTax withdrawal (used as proxy for declared income). */
+  rate: number;
+  /** Annual floor — minimum total healthcare cost regardless of income. */
+  minUSD: number;
+  /** Annual ceiling — maximum total healthcare cost; the income-scaled premium caps here. */
+  maxUSD: number;
+}
+
 export interface Country {
   id: string;
   name: string;
@@ -72,8 +88,10 @@ export interface Country {
   region: Region;
   /** Multiplier on user's USD baseline spending. 1.00 = US baseline. */
   colMultiplier: number;
-  /** Additive baseline annual healthcare cost in USD for a retired adult / small family. */
+  /** Additive baseline annual healthcare cost in USD for a retired adult / small family. Used directly when premiumModel is absent; treated as a documentation fallback when premiumModel is present. */
   annualHealthcareUSD: number;
+  /** Optional income-scaled premium curve (Korea NHIS, Japan NHI). When present, overrides annualHealthcareUSD at compute time. */
+  premiumModel?: PremiumModel;
   /** Approximate effective tax rate on retirement withdrawals. */
   withdrawalTaxRate: number;
   /** Suggested safe withdrawal rate baseline. */
@@ -136,6 +154,10 @@ export interface FireResult {
   /** True if user already has enough to retire here. */
   alreadyFire: boolean;
   confidence: 'high' | 'medium' | 'low';
+  /** Annual healthcare cost actually used in this calculation. For income-scaled countries this may differ from Country.annualHealthcareUSD. */
+  annualHealthcareUSD: number;
+  /** True if this country's healthcare premium scales with income. */
+  premiumScales: boolean;
 }
 
 export type SafetyThreshold = 'any' | 'very-safe' | 'safe' | 'moderate';

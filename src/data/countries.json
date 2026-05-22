@@ -1,7 +1,7 @@
 {
-  "version": "0.6.0",
-  "lastUpdated": "2026-05-20",
-  "lastReviewed": "2026-05-20",
+  "version": "0.7.0",
+  "lastUpdated": "2026-05-22",
+  "lastReviewed": "2026-05-22",
   "schema": {
     "region": "One of: Americas, Europe, East Asia, Southeast Asia, Middle East & Africa, Oceania.",
     "colMultiplier": "Cost of living multiplier on user's USD baseline spending. 1.00 = US. Derived from Numbeo Cost of Living Index by Country, relative to US (US = 68.8 -> 1.00).",
@@ -366,6 +366,70 @@
       "caveats": [
         "High inflation and currency controls historically; situation evolving rapidly under recent governments.",
         "Effective tax for foreigners with dollar-denominated assets often informal; treat the rate as nominal."
+      ]
+    },
+    {
+      "id": "br",
+      "name": "Brazil",
+      "flag": "BR",
+      "region": "Americas",
+      "colMultiplier": 0.44,
+      "annualHealthcareUSD": 2500,
+      "withdrawalTaxRate": 0.15,
+      "swr": 0.04,
+      "safetyScore": 2.472,
+      "safetyRank": 130,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "limited",
+      "yearsToCitizenship": 4,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
+      "residencyNote": "VITEM XIV retirement visa requires USD 2,000/month passive income with no age requirement. Threshold has held since Normative Resolution 40/2019. Permanent residency after the temporary period.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "name": "PwC Worldwide Tax Summaries — Brazil",
+          "url": "https://taxsummaries.pwc.com/brazil/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
+        }
+      ],
+      "caveats": [
+        "Tax residents owe Brazilian income tax on worldwide income; progressive brackets up to 27.5%. No comprehensive US-Brazil income tax treaty in force as of 2026 (negotiation ongoing); US foreign tax credit applies but no treaty-based relief.",
+        "Public healthcare (SUS) varies sharply by region; private insurance is the practical norm for retirees.",
+        "Safety is the chief concern: GPI rank 130 of 163. Urban violence concentrated in specific neighborhoods; expat communities cluster in safer pockets (Florianópolis, Curitiba, parts of São Paulo state)."
+      ]
+    },
+    {
+      "id": "py",
+      "name": "Paraguay",
+      "flag": "PY",
+      "region": "Americas",
+      "colMultiplier": 0.41,
+      "annualHealthcareUSD": 2000,
+      "withdrawalTaxRate": 0,
+      "swr": 0.04,
+      "safetyScore": 1.981,
+      "safetyRank": 75,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "limited",
+      "yearsToCitizenship": 3,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
+      "residencyNote": "Strict territorial tax: 0% on foreign-source income (pensions, dividends, investment gains earned abroad). Permanent residency simplified post-2022; no minimum days required to maintain tax residency.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "name": "PwC Worldwide Tax Summaries — Paraguay",
+          "url": "https://taxsummaries.pwc.com/paraguay/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
+        }
+      ],
+      "caveats": [
+        "Paraguayan-source income taxed at flat 10%; foreign-source income is the standard FIRE case and is untaxed.",
+        "Spanish and Guaraní dominant; English mainly in Asunción business circles. Plan to learn Spanish for daily life.",
+        "Healthcare infrastructure thinner than Brazil/Argentina; serious cases typically routed to private hospitals in Asunción or to neighboring countries."
       ]
     },
     {
@@ -1051,12 +1115,146 @@
       ]
     },
     {
+      "id": "bg",
+      "name": "Bulgaria",
+      "flag": "BG",
+      "region": "Europe",
+      "colMultiplier": 0.6,
+      "annualHealthcareUSD": 1500,
+      "withdrawalTaxRate": 0.1,
+      "swr": 0.04,
+      "safetyScore": 1.61,
+      "safetyRank": 29,
+      "dominantFaith": "Orthodox",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "restricted",
+      "residencyNote": "10% flat personal income tax with no progressive brackets — joint-lowest in EU (with Romania). No dedicated retirement visa; long-stay D visa with proof of income leads to permanent residence and EU residence after 5 years.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "name": "Bulgaria Ministry of Finance — Personal Income Taxes",
+          "url": "https://www.minfin.bg/en/827",
+          "lastVerified": "2026-05-22"
+        }
+      ],
+      "caveats": [
+        "Non-EU citizens face restrictions on agricultural land but can own residential property (apartments, houses on plots) freely.",
+        "Bulgarian language B2 test for naturalization. Russian widely understood by older generations; English among younger urban professionals.",
+        "Sofia significantly more expensive than smaller cities; Plovdiv and Veliko Tarnovo are common expat alternatives."
+      ]
+    },
+    {
+      "id": "cy",
+      "name": "Cyprus",
+      "flag": "CY",
+      "region": "Europe",
+      "colMultiplier": 0.85,
+      "annualHealthcareUSD": 1500,
+      "withdrawalTaxRate": 0.05,
+      "swr": 0.04,
+      "safetyScore": 1.933,
+      "safetyRank": 68,
+      "dominantFaith": "Orthodox",
+      "visaDifficulty": "easy",
+      "englishLevel": "widespread",
+      "yearsToCitizenship": 7,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
+      "residencyNote": "Non-dom regime: 0% Special Defence Contribution on dividends/interest/rental for up to 17 years (extendable). Foreign pensioners may elect 5% flat tax on pension income above €5,000/year (vs. standard progressive rates). 60-day fast residency available if not tax-resident elsewhere.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "name": "PwC Worldwide Tax Summaries — Cyprus",
+          "url": "https://taxsummaries.pwc.com/cyprus/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
+        }
+      ],
+      "caveats": [
+        "Non-dom regime survived the 2026 personal tax overhaul unchanged; extension fee €250k per 5-year period beyond initial 17 years.",
+        "Greek-Cypriot south is fully EU; Northern Cyprus is a separate jurisdiction (TRNC) recognized only by Turkey — assume south for any FIRE planning.",
+        "Non-EU foreigners need Council of Ministers approval to buy property; typically limited to one property up to 4,014 m² of land. Approval is routine but adds 6-12 months."
+      ]
+    },
+    {
+      "id": "mt",
+      "name": "Malta",
+      "flag": "MT",
+      "region": "Europe",
+      "colMultiplier": 0.83,
+      "annualHealthcareUSD": 1800,
+      "withdrawalTaxRate": 0.15,
+      "swr": 0.04,
+      "safetyScore": 1.585,
+      "safetyRank": 27,
+      "dominantFaith": "Catholic",
+      "visaDifficulty": "easy",
+      "englishLevel": "widespread",
+      "yearsToCitizenship": 5,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
+      "residencyNote": "Malta Retirement Programme (MRP): 15% flat tax on foreign income remitted to Malta with €7,500 annual minimum tax + €500 per dependent. Requires property purchase (€275k Malta / €220k Gozo) or rental (€9,600/yr Malta), 90 days/year minimum residence averaged over 5 years, and no other tax residency above 183 days.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "name": "Malta Tax and Customs Administration — Malta Retirement Programme",
+          "url": "https://mtca.gov.mt/personal-tax/individual/special-schemes/malta-retirement-programme",
+          "lastVerified": "2026-05-22"
+        }
+      ],
+      "caveats": [
+        "Not included in the GPI 2025 ranking (IEP covers 163 states; Malta omitted). Safety values shown are calibrated to Malta's last GPI inclusion (~rank 23-27 in 2022) and stable cluster position. Treat as indicative.",
+        "Only foreign income remitted to Malta is taxed at 15%; income kept abroad is untaxed (remittance basis). The €7,500 minimum tax binds for retirees with low remittances.",
+        "English is co-official with Maltese — strongest English-immersion EU destination after Ireland."
+      ]
+    },
+    {
+      "id": "ro",
+      "name": "Romania",
+      "flag": "RO",
+      "region": "Europe",
+      "colMultiplier": 0.59,
+      "annualHealthcareUSD": 1500,
+      "withdrawalTaxRate": 0.13,
+      "swr": 0.04,
+      "safetyScore": 1.721,
+      "safetyRank": 38,
+      "dominantFaith": "Orthodox",
+      "visaDifficulty": "medium",
+      "englishLevel": "urban",
+      "yearsToCitizenship": 8,
+      "dualCitizenshipAllowed": true,
+      "foreignerPropertyOwnership": "allowed",
+      "residencyNote": "10% flat personal income tax — joint-lowest in EU (with Bulgaria). Pension above RON 3,000/month (~$650) currently subject to 10% income tax plus 10% CASS health contribution through Dec 2027 (temporary). No dedicated retirement visa; long-stay visa via passive income.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "name": "PwC Worldwide Tax Summaries — Romania",
+          "url": "https://taxsummaries.pwc.com/romania/individual/taxes-on-personal-income",
+          "lastVerified": "2026-05-22"
+        }
+      ],
+      "caveats": [
+        "Effective rate blends two regimes: ~16% on pension income above threshold while CASS applies (through Dec 2027), reverting to ~10% afterward. The 0.13 figure is a midpoint between current and post-sunset states.",
+        "Dividend tax rose to 16% in 2026 (from 10%); retirees with heavy taxable-brokerage withdrawals will see higher effective rates than the headline 10%.",
+        "Non-EU foreigners face restrictions on agricultural and forest land; urban residential property freely purchasable."
+      ]
+    },
+    {
       "id": "kr",
       "name": "South Korea",
       "flag": "KR",
       "region": "East Asia",
       "colMultiplier": 0.9,
       "annualHealthcareUSD": 3500,
+      "premiumModel": {
+        "type": "income-scaled",
+        "rate": 0.082,
+        "minUSD": 2400,
+        "maxUSD": 7500
+      },
       "withdrawalTaxRate": 0.08,
       "swr": 0.04,
       "safetyScore": 1.736,
@@ -1067,7 +1265,7 @@
       "yearsToCitizenship": 5,
       "dualCitizenshipAllowed": false,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "F-2 long-term residency or F-5 permanent residency. No dedicated retirement visa; pathway requires prior residency, family ties, or qualifying income.",
+      "residencyNote": "F-2 long-term residency or F-5 permanent residency. No dedicated retirement visa; pathway requires prior residency, family ties, or qualifying income. NHIS premium for foreign regional subscribers scales with declared income at ~8.2% (incl. long-term care), floored at the foreigner-regional minimum (~$110/month) and capped at the statutory income ceiling.",
       "confidence": "medium",
       "sources": [
         {
@@ -1083,6 +1281,8 @@
       ],
       "caveats": [
         "COL multiplier (0.90) is higher than commonly assumed — Seoul is expensive for major appliances and housing.",
+        "NHIS healthcare cost scales with declared income: ~$2,400/yr floor for low spenders, ~$7,500/yr at the income cap. The flat $3,500 figure is now a documentation fallback; the model uses the income-scaled curve.",
+        "Foreigner regional subscribers cannot fall below the all-subscriber average premium even if their declared income would otherwise produce a lower figure.",
         "Visa path is the practical constraint for most US citizens, not the math."
       ]
     },
@@ -1093,6 +1293,12 @@
       "region": "East Asia",
       "colMultiplier": 0.69,
       "annualHealthcareUSD": 3000,
+      "premiumModel": {
+        "type": "income-scaled",
+        "rate": 0.1,
+        "minUSD": 1500,
+        "maxUSD": 7500
+      },
       "withdrawalTaxRate": 0.1,
       "swr": 0.04,
       "safetyScore": 1.44,
@@ -1103,7 +1309,7 @@
       "yearsToCitizenship": 5,
       "dualCitizenshipAllowed": false,
       "foreignerPropertyOwnership": "allowed",
-      "residencyNote": "No dedicated retirement visa. Long-term resident or spouse-of-Japanese visa are common pathways. Highly Skilled Professional visa accelerates PR for qualifying workers.",
+      "residencyNote": "No dedicated retirement visa. Long-term resident or spouse-of-Japanese visa are common pathways. Highly Skilled Professional visa accelerates PR for qualifying workers. National Health Insurance (kokumin kenko hoken) for non-employees scales with prior-year income: ~10% combined (medical + elderly support + long-term care), floored at the per-household equal-share base, and capped at the FY2025 statutory ceiling (combined ~¥1.06M ≈ $7,000).",
       "confidence": "medium",
       "sources": [
         {
@@ -1119,6 +1325,7 @@
       ],
       "caveats": [
         "Japan taxes worldwide income for residents after 5 of last 10 years in country.",
+        "NHI premium scales with income: floor ~$1,500/yr at low spending, ceiling ~$7,500/yr at the statutory cap. Rates and floor vary by municipality (Tokyo wards used as baseline).",
         "Inheritance tax exposure for long-term residents is significant — not modeled here."
       ]
     },

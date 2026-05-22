@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  annualHealthcareCost,
   bridgeYears,
   BRIDGE_THRESHOLD_YEARS,
   coastFireYears,
@@ -8,12 +9,14 @@ import {
   filterCountries,
   hasLongBridge,
   SOCIAL_SECURITY_EARLIEST_AGE,
+  solveIncomeScaledPremium,
   yearsToTarget,
 } from '../src/domain/fire';
 import {
   ALL_REGIONS,
   type Country,
   type FilterCriteria,
+  type PremiumModel,
   type Region,
   type UserInputs,
 } from '../src/domain/types';
@@ -414,6 +417,180 @@ describe('countries.json integrity', () => {
     // GPI score and rank should correlate strongly. Sample a few high/low pairs.
     const byRank = [...countriesData.countries].sort((a, b) => a.safetyRank - b.safetyRank);
     expect(byRank[0].safetyScore).toBeLessThan(byRank[byRank.length - 1].safetyScore);
+  });
+});
+
+describe('annualHealthcareCost', () => {
+  const flatCountry: Country = { ...usCountry };
+  const scaledCountry: Country = {
+    ...usCountry,
+    id: 'scaled',
+    premiumModel: { type: 'income-scaled', rate: 0.08, minUSD: 2000, maxUSD: 6000 },
+  };
+
+  it('returns flat annualHealthcareUSD when no premiumModel present', () => {
+    expect(annualHealthcareCost(flatCountry, 50_000)).toBe(flatCountry.annualHealthcareUSD);
+    expect(annualHealthcareCost(flatCountry, 200_000)).toBe(flatCountry.annualHealthcareUSD);
+  });
+
+  it('returns minUSD when rate*income is below the floor', () => {
+    expect(annualHealthcareCost(scaledCountry, 10_000)).toBe(2000); // 800 < 2000
+    expect(annualHealthcareCost(scaledCountry, 24_000)).toBe(2000); // 1920 < 2000
+  });
+
+  it('returns rate*income in the interior region', () => {
+    expect(annualHealthcareCost(scaledCountry, 50_000)).toBe(4000); // 0.08 * 50k = 4k
+  });
+
+  it('returns maxUSD when rate*income exceeds the ceiling', () => {
+    expect(annualHealthcareCost(scaledCountry, 100_000)).toBe(6000); // 8000 > 6000
+    expect(annualHealthcareCost(scaledCountry, 250_000)).toBe(6000);
+  });
+
+  it('is monotonically non-decreasing in income', () => {
+    let prev = -1;
+    for (let income = 0; income <= 200_000; income += 5_000) {
+      const cost = annualHealthcareCost(scaledCountry, income);
+      expect(cost).toBeGreaterThanOrEqual(prev);
+      prev = cost;
+    }
+  });
+});
+
+describe('solveIncomeScaledPremium', () => {
+  const model: PremiumModel = { type: 'income-scaled', rate: 0.08, minUSD: 2000, maxUSD: 6000 };
+
+  it('interior solution: premium = rate * preTax and preTax satisfies the joint equation', () => {
+    // baselineSpend=50k, COL=0.9, tax=0.08, rate=0.08 → denom = 1 - 0.08 - 0.08 = 0.84
+    // preTax = 50_000 * 0.9 / 0.84 = 53_571.43
+    // premium = 0.08 * 53_571.43 = 4_285.71 (interior: between 2000 and 6000)
+    const r = solveIncomeScaledPremium(50_000, 0.9, 0.08, model);
+    expect(r.preTax).toBeCloseTo(53_571.43, 1);
+    expect(r.premium).toBeCloseTo(4_285.71, 1);
+    // Verify the joint equation: preTax = (sc + premium) / (1 - tax)
+    expect(r.preTax).toBeCloseTo((50_000 * 0.9 + r.premium) / (1 - 0.08), 4);
+    // And: premium = rate * preTax
+    expect(r.premium).toBeCloseTo(model.rate * r.preTax, 4);
+  });
+
+  it('floor solution when interior premium would fall below minUSD', () => {
+    // baselineSpend=10k → interior premium = 0.08 * 10_000 * 0.9 / 0.84 = 857 < 2000 floor
+    // Floor branch: preTax = (10_000 * 0.9 + 2000) / 0.92 = 11_000 / 0.92 = 11_956.52
+    const r = solveIncomeScaledPremium(10_000, 0.9, 0.08, model);
+    expect(r.premium).toBe(2000);
+    expect(r.preTax).toBeCloseTo(11_956.52, 1);
+  });
+
+  it('ceiling solution when interior premium would exceed maxUSD', () => {
+    // baselineSpend=150k → interior premium = 0.08 * 150_000 * 0.9 / 0.84 = 12_857 > 6000 cap
+    // Ceiling branch: preTax = (150_000 * 0.9 + 6000) / 0.92 = 141_000 / 0.92 = 153_260.87
+    const r = solveIncomeScaledPremium(150_000, 0.9, 0.08, model);
+    expect(r.premium).toBe(6000);
+    expect(r.preTax).toBeCloseTo(153_260.87, 1);
+  });
+
+  it('returns ceiling defensively when tax + rate >= 100% (interior undefined)', () => {
+    const degenerate: PremiumModel = { type: 'income-scaled', rate: 0.6, minUSD: 1000, maxUSD: 5000 };
+    const r = solveIncomeScaledPremium(50_000, 1.0, 0.5, degenerate);
+    expect(r.premium).toBe(5000);
+    expect(r.preTax).toBeCloseTo((50_000 + 5000) / 0.5, 4);
+  });
+
+  it('preTax is continuous at the floor/interior boundary', () => {
+    // At the boundary, interior premium = minUSD; both branches return the same preTax.
+    // 0.08 * (S * 0.9) / 0.84 = 2000 → S = 2000 * 0.84 / (0.08 * 0.9) = 23_333.33
+    const boundarySpend = (model.minUSD * (1 - 0.08 - 0.08)) / (model.rate * 0.9);
+    const epsilon = 0.001;
+    const justBelow = solveIncomeScaledPremium(boundarySpend - epsilon, 0.9, 0.08, model);
+    const justAbove = solveIncomeScaledPremium(boundarySpend + epsilon, 0.9, 0.08, model);
+    // The function should be continuous: a tiny perturbation should produce a tiny output change.
+    expect(Math.abs(justBelow.preTax - justAbove.preTax)).toBeLessThan(0.01);
+    expect(Math.abs(justBelow.premium - justAbove.premium)).toBeLessThan(0.01);
+  });
+
+  it('preTax is continuous at the interior/ceiling boundary', () => {
+    // 0.08 * (S * 0.9) / 0.84 = 6000 → S = 6000 * 0.84 / 0.072 = 70_000
+    const boundarySpend = (model.maxUSD * (1 - 0.08 - 0.08)) / (model.rate * 0.9);
+    const epsilon = 0.001;
+    const justBelow = solveIncomeScaledPremium(boundarySpend - epsilon, 0.9, 0.08, model);
+    const justAbove = solveIncomeScaledPremium(boundarySpend + epsilon, 0.9, 0.08, model);
+    expect(Math.abs(justBelow.preTax - justAbove.preTax)).toBeLessThan(0.01);
+    expect(Math.abs(justBelow.premium - justAbove.premium)).toBeLessThan(0.01);
+  });
+});
+
+describe('computeCountryFire with income-scaled premium', () => {
+  const baseUser: UserInputs = {
+    currentSavings: 0,
+    annualSavings: 50_000,
+    currentSpending: 50_000,
+    currentAge: 40,
+    realReturn: 0.05,
+  };
+  const koreaIdx = countriesData.countries.findIndex((c) => c.id === 'kr');
+  const korea = countriesData.countries[koreaIdx] as Country;
+  const japanIdx = countriesData.countries.findIndex((c) => c.id === 'jp');
+  const japan = countriesData.countries[japanIdx] as Country;
+
+  it('Korea entry has an income-scaled premium model', () => {
+    expect(korea.premiumModel).toBeDefined();
+    expect(korea.premiumModel?.type).toBe('income-scaled');
+  });
+
+  it('Japan entry has an income-scaled premium model', () => {
+    expect(japan.premiumModel).toBeDefined();
+    expect(japan.premiumModel?.type).toBe('income-scaled');
+  });
+
+  it('Korea FIRE result exposes the actual scaled premium, not the flat fallback', () => {
+    const r = computeCountryFire(baseUser, korea);
+    expect(r.premiumScales).toBe(true);
+    // For a $50k baseline at COL 0.9, rate 0.082, tax 0.08:
+    // interior preTax = 45_000 / (1 - 0.08 - 0.082) = 45_000 / 0.838 ≈ 53_699
+    // premium = 0.082 * 53_699 ≈ 4_403, which is interior (between 2400 and 7500)
+    expect(r.annualHealthcareUSD).toBeGreaterThan(korea.premiumModel!.minUSD);
+    expect(r.annualHealthcareUSD).toBeLessThan(korea.premiumModel!.maxUSD);
+    expect(r.annualHealthcareUSD).toBeCloseTo(4_403, -1);
+  });
+
+  it('low-spending user hits Korea NHIS floor', () => {
+    const lowSpender: UserInputs = { ...baseUser, currentSpending: 12_000 };
+    const r = computeCountryFire(lowSpender, korea);
+    expect(r.annualHealthcareUSD).toBe(korea.premiumModel!.minUSD);
+  });
+
+  it('high-spending user hits Korea NHIS ceiling', () => {
+    const highSpender: UserInputs = { ...baseUser, currentSpending: 120_000 };
+    const r = computeCountryFire(highSpender, korea);
+    expect(r.annualHealthcareUSD).toBe(korea.premiumModel!.maxUSD);
+  });
+
+  it('Korea FIRE number rises monotonically with spending under the scaled model', () => {
+    const spends = [20_000, 40_000, 60_000, 80_000, 100_000];
+    const fires = spends.map((s) => computeCountryFire({ ...baseUser, currentSpending: s }, korea).fireNumber);
+    for (let i = 1; i < fires.length; i++) {
+      expect(fires[i]).toBeGreaterThan(fires[i - 1]);
+    }
+  });
+
+  it('flat countries are unaffected by the premium model logic', () => {
+    const portugalIdx = countriesData.countries.findIndex((c) => c.id === 'pt');
+    const pt = countriesData.countries[portugalIdx] as Country;
+    expect(pt.premiumModel).toBeUndefined();
+    const r = computeCountryFire(baseUser, pt);
+    expect(r.premiumScales).toBe(false);
+    expect(r.annualHealthcareUSD).toBe(pt.annualHealthcareUSD);
+  });
+
+  it('localizedSpending equals baselineSpend*COL + scaledPremium', () => {
+    const r = computeCountryFire(baseUser, korea);
+    const expected = baseUser.currentSpending * korea.colMultiplier + r.annualHealthcareUSD;
+    expect(r.localizedSpending).toBeCloseTo(expected, 4);
+  });
+
+  it('preTax = localizedSpending / (1 - tax) holds for the scaled case', () => {
+    const r = computeCountryFire(baseUser, korea);
+    expect(r.preTaxWithdrawalNeeded).toBeCloseTo(r.localizedSpending / (1 - korea.withdrawalTaxRate), 2);
   });
 });
 

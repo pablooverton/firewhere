@@ -1,4 +1,4 @@
-import type { Country, ComputeOptions, FilterCriteria, FireResult, UserInputs } from './types';
+import type { Country, ComputeOptions, FilterCriteria, FireResult, PremiumModel, UserInputs } from './types';
 import { ENGLISH_LEVEL, SAFETY_THRESHOLD_SCORE, VISA_LEVEL } from './types';
 
 export const DEFAULT_TARGET_RETIREMENT_AGE = 65;
@@ -125,18 +125,88 @@ export function coastFireYears(
 
 const DEFAULT_OPTIONS: ComputeOptions = { mode: 'fire', targetRetirementAge: DEFAULT_TARGET_RETIREMENT_AGE };
 
+/**
+ * Solve the joint healthcare/withdrawal system for a country whose healthcare premium
+ * scales with declared income (Korea NHIS, Japan NHI).
+ *
+ * System:
+ *   localizedSpending = baselineSpend * COL + premium
+ *   premium           = clamp(rate * preTax, minUSD, maxUSD)
+ *   preTax            = localizedSpending / (1 - tax)
+ *
+ * Closed-form by region:
+ *   Interior  preTax = (baselineSpend * COL) / (1 - tax - rate)
+ *   Floor     preTax = (baselineSpend * COL + minUSD) / (1 - tax)
+ *   Ceiling   preTax = (baselineSpend * COL + maxUSD) / (1 - tax)
+ *
+ * Region selection: compute the interior premium; if it falls below minUSD use the
+ * floor branch, above maxUSD use the ceiling branch, otherwise interior.
+ *
+ * Defensive: if (1 - tax - rate) ≤ 0 the interior is undefined; fall through to
+ * the ceiling branch (highest-income case) so the answer remains finite.
+ */
+export function solveIncomeScaledPremium(
+  baselineSpend: number,
+  colMultiplier: number,
+  tax: number,
+  model: PremiumModel
+): { premium: number; preTax: number } {
+  const sc = baselineSpend * colMultiplier;
+  const denom = 1 - tax - model.rate;
+
+  if (denom <= 0) {
+    const preTax = (sc + model.maxUSD) / (1 - tax);
+    return { premium: model.maxUSD, preTax };
+  }
+
+  const interiorPreTax = sc / denom;
+  const interiorPremium = model.rate * interiorPreTax;
+
+  if (interiorPremium < model.minUSD) {
+    const preTax = (sc + model.minUSD) / (1 - tax);
+    return { premium: model.minUSD, preTax };
+  }
+  if (interiorPremium > model.maxUSD) {
+    const preTax = (sc + model.maxUSD) / (1 - tax);
+    return { premium: model.maxUSD, preTax };
+  }
+  return { premium: interiorPremium, preTax: interiorPreTax };
+}
+
+/** Annual healthcare cost for a country at a given pre-tax withdrawal income level. */
+export function annualHealthcareCost(country: Country, preTaxIncome: number): number {
+  if (country.premiumModel?.type === 'income-scaled') {
+    const m = country.premiumModel;
+    return Math.max(m.minUSD, Math.min(m.maxUSD, m.rate * preTaxIncome));
+  }
+  return country.annualHealthcareUSD;
+}
+
 export function computeCountryFire(
   user: UserInputs,
   country: Country,
   options: ComputeOptions = DEFAULT_OPTIONS
 ): FireResult {
-  const localizedSpending =
-    user.currentSpending * country.colMultiplier + country.annualHealthcareUSD;
+  let premium: number;
+  let preTaxWithdrawalNeeded: number;
 
-  const preTaxWithdrawalNeeded =
-    country.withdrawalTaxRate < 1
-      ? localizedSpending / (1 - country.withdrawalTaxRate)
-      : Infinity;
+  if (country.premiumModel?.type === 'income-scaled' && country.withdrawalTaxRate < 1) {
+    const solved = solveIncomeScaledPremium(
+      user.currentSpending,
+      country.colMultiplier,
+      country.withdrawalTaxRate,
+      country.premiumModel
+    );
+    premium = solved.premium;
+    preTaxWithdrawalNeeded = solved.preTax;
+  } else {
+    premium = country.annualHealthcareUSD;
+    const localized = user.currentSpending * country.colMultiplier + premium;
+    preTaxWithdrawalNeeded =
+      country.withdrawalTaxRate < 1 ? localized / (1 - country.withdrawalTaxRate) : Infinity;
+  }
+
+  const localizedSpending = user.currentSpending * country.colMultiplier + premium;
 
   const fireNumber = country.swr > 0 ? preTaxWithdrawalNeeded / country.swr : Infinity;
   const alreadyFire = user.currentSavings >= fireNumber;
@@ -164,6 +234,8 @@ export function computeCountryFire(
     fireAge,
     alreadyFire,
     confidence: country.confidence,
+    annualHealthcareUSD: premium,
+    premiumScales: country.premiumModel?.type === 'income-scaled',
   };
 }
 
