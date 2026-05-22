@@ -352,6 +352,10 @@ export function computeCountryFire(
 
   const fireAge = Number.isFinite(yearsToFire) ? user.currentAge + yearsToFire : Infinity;
 
+  const stressFireNumber = Number.isFinite(fireNumber)
+    ? fireNumber * (1 + country.currencyVolatilityPct)
+    : fireNumber;
+
   return {
     countryId: country.id,
     localizedSpending,
@@ -365,6 +369,9 @@ export function computeCountryFire(
     premiumScales: hasScaling,
     effectiveTaxRate,
     bracketTax: hasBrackets,
+    stressFireNumber,
+    currencyCode: country.currencyCode,
+    currencyVolatilityPct: country.currencyVolatilityPct,
   };
 }
 

@@ -129,6 +129,10 @@ export interface Country {
   dualCitizenshipAllowed: boolean;
   /** Foreign residential property ownership classification. */
   foreignerPropertyOwnership: PropertyOwnership;
+  /** ISO 4217 currency code of the country's de facto currency (USD, EUR, KRW, etc.). Multiple countries share EUR; USD-using countries (Ecuador, Panama) explicitly use USD. */
+  currencyCode: string;
+  /** Annualized standard deviation of monthly log returns of the local currency vs USD. 0 for USD-using countries and hard pegs (AED, HKD). Approximate 5-yr historical observation. */
+  currencyVolatilityPct: number;
   residencyNote: string;
   confidence: 'high' | 'medium' | 'low';
   sources: Array<{ name: string; url: string | null; lastVerified: string }>;
@@ -152,6 +156,7 @@ export interface CountryDataFile {
   dataSources: {
     safety: DataSource;
     costOfLiving: DataSource;
+    fxVolatility?: DataSource;
   };
   countries: Country[];
 }
@@ -179,6 +184,12 @@ export interface FireResult {
   effectiveTaxRate: number;
   /** True if this country uses progressive bracket-level tax math. */
   bracketTax: boolean;
+  /** 1σ adverse currency stress: fireNumber × (1 + currencyVolatilityPct). Approximates the FIRE# if the local currency rallied 1σ vs USD. */
+  stressFireNumber: number;
+  /** Currency code passed through from Country. */
+  currencyCode: string;
+  /** Currency volatility passed through from Country. */
+  currencyVolatilityPct: number;
 }
 
 export type SafetyThreshold = 'any' | 'very-safe' | 'safe' | 'moderate';

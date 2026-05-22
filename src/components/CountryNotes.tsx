@@ -34,6 +34,9 @@ export function CountryNotes({ sortedResults, countryById, mode, inputs }: Props
             {r.premiumScales && c.premiumModel && (
               <ScaledPremiumDetail result={r} model={c.premiumModel} />
             )}
+            {r.currencyVolatilityPct > 0 && Number.isFinite(r.fireNumber) && (
+              <CurrencyDetail result={r} />
+            )}
             {showBridgeWarning && (
               <BridgeWarning fireAge={r.fireAge} lumpslamURL={lumpslamURL} />
             )}
@@ -48,6 +51,19 @@ export function CountryNotes({ sortedResults, countryById, mode, inputs }: Props
         );
       })}
     </section>
+  );
+}
+
+function CurrencyDetail({ result }: { result: FireResult }) {
+  const stressDelta = result.stressFireNumber - result.fireNumber;
+  return (
+    <div className="mb-2 p-2 rounded-md border border-amber-900/40 bg-amber-950/20 text-xs text-amber-100/90">
+      <span className="font-semibold text-amber-200">Currency:</span>{' '}
+      {result.currencyCode} — {(result.currencyVolatilityPct * 100).toFixed(0)}% annualized volatility vs USD.{' '}
+      <span className="text-amber-300/70">
+        1σ adverse move adds {formatUSD(stressDelta)} to FIRE number ({formatUSD(result.fireNumber)} → {formatUSD(result.stressFireNumber)}).
+      </span>
+    </div>
   );
 }
 

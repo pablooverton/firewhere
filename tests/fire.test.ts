@@ -42,6 +42,8 @@ const usCountry: Country = {
   yearsToCitizenship: 5,
   dualCitizenshipAllowed: true,
   foreignerPropertyOwnership: 'allowed',
+  currencyCode: 'USD',
+  currencyVolatilityPct: 0,
   residencyNote: '',
   confidence: 'high',
   sources: [],
@@ -853,6 +855,98 @@ describe('countries.json integrity for bracket fields', () => {
     const withBrackets = countriesData.countries.filter((c) => 'taxBrackets' in c).map((c) => c.id);
     expect(withBrackets.length).toBe(10);
     expect(withBrackets.sort()).toEqual(['de', 'es', 'fr', 'gb', 'jp', 'kr', 'mx', 'pt', 'th', 'us'].sort());
+  });
+});
+
+describe('currency volatility', () => {
+  const all = countriesData.countries as Country[];
+
+  it('every country has currencyCode and currencyVolatilityPct', () => {
+    for (const c of all) {
+      expect(typeof c.currencyCode).toBe('string');
+      expect(c.currencyCode.length).toBeGreaterThan(0);
+      expect(typeof c.currencyVolatilityPct).toBe('number');
+      expect(c.currencyVolatilityPct).toBeGreaterThanOrEqual(0);
+      expect(c.currencyVolatilityPct).toBeLessThan(1);
+    }
+  });
+
+  it('USD-using countries (US, Ecuador, Panama) have zero volatility', () => {
+    const usdUsers = all.filter((c) => c.currencyCode === 'USD').map((c) => c.id).sort();
+    expect(usdUsers).toEqual(['ec', 'pa', 'us']);
+    for (const id of usdUsers) {
+      const c = all.find((x) => x.id === id)!;
+      expect(c.currencyVolatilityPct).toBe(0);
+    }
+  });
+
+  it('Eurozone countries share EUR and the same volatility', () => {
+    const eurCountries = all.filter((c) => c.currencyCode === 'EUR');
+    expect(eurCountries.length).toBeGreaterThan(10);
+    const vols = new Set(eurCountries.map((c) => c.currencyVolatilityPct));
+    expect(vols.size).toBe(1);
+  });
+
+  it('hard-pegged currencies (UAE AED) have near-zero volatility', () => {
+    const ae = all.find((c) => c.id === 'ae')!;
+    expect(ae.currencyCode).toBe('AED');
+    expect(ae.currencyVolatilityPct).toBeLessThanOrEqual(0.02);
+  });
+
+  it('crisis currencies (ARS, TRY) have high volatility', () => {
+    const ar = all.find((c) => c.id === 'ar')!;
+    const tr = all.find((c) => c.id === 'tr')!;
+    expect(ar.currencyVolatilityPct).toBeGreaterThanOrEqual(0.2);
+    expect(tr.currencyVolatilityPct).toBeGreaterThanOrEqual(0.2);
+  });
+
+  it('FireResult exposes stressFireNumber = fireNumber * (1 + vol)', () => {
+    const baseUser: UserInputs = {
+      currentSavings: 0,
+      annualSavings: 50_000,
+      currentSpending: 50_000,
+      currentAge: 40,
+      realReturn: 0.05,
+    };
+    // Test against a Korea (KRW, 10% vol) and US (USD, 0% vol)
+    const us = all.find((c) => c.id === 'us')!;
+    const kr = all.find((c) => c.id === 'kr')!;
+    const usResult = computeCountryFire(baseUser, us);
+    const krResult = computeCountryFire(baseUser, kr);
+    expect(usResult.stressFireNumber).toBe(usResult.fireNumber); // 0 vol → no stress
+    expect(krResult.stressFireNumber).toBeCloseTo(krResult.fireNumber * 1.1, 2);
+  });
+
+  it('stressFireNumber > fireNumber for non-USD countries', () => {
+    const baseUser: UserInputs = {
+      currentSavings: 0,
+      annualSavings: 50_000,
+      currentSpending: 50_000,
+      currentAge: 40,
+      realReturn: 0.05,
+    };
+    const nonUsd = all.filter((c) => c.currencyCode !== 'USD' && c.currencyVolatilityPct > 0);
+    for (const c of nonUsd.slice(0, 10)) {
+      const r = computeCountryFire(baseUser, c);
+      if (Number.isFinite(r.fireNumber)) {
+        expect(r.stressFireNumber).toBeGreaterThan(r.fireNumber);
+      }
+    }
+  });
+
+  it('Korea joint-solver result preserves currency stress field correctly', () => {
+    const baseUser: UserInputs = {
+      currentSavings: 0,
+      annualSavings: 50_000,
+      currentSpending: 50_000,
+      currentAge: 40,
+      realReturn: 0.05,
+    };
+    const kr = all.find((c) => c.id === 'kr')!;
+    const r = computeCountryFire(baseUser, kr);
+    expect(r.currencyCode).toBe('KRW');
+    expect(r.currencyVolatilityPct).toBe(0.1);
+    expect(r.stressFireNumber).toBeCloseTo(r.fireNumber * 1.1, 2);
   });
 });
 
